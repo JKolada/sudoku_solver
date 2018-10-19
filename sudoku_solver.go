@@ -212,7 +212,7 @@ func (s *Sudoku) correctPotentialityImplications() bool {
           }
         }
       }  
-      
+
       for a := range rowTruthCounter {
         rowTruthCounter[a] = 0
       }
@@ -247,9 +247,9 @@ func (s *Sudoku) correctPotentialityImplications() bool {
         columnTruthCounter[a] = 0
       }
 
-      for a := a_min; a <= a_max; a++ {
-        for c := range column_potentiality[a] {
-          if column_potentiality[a][c] {
+      for b := b_min; b <= b_max; b++ {
+        for c := range column_potentiality[b] {
+          if column_potentiality[b][c] {
             columnTruthCounter[c]++
           }
         }
