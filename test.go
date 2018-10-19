@@ -72,6 +72,6 @@ var sudokuInput_GOD = [9][9]uint8{
 }
 
 func main() {
-    a := NewSudoku(sudokuInput_hard)
+    a := NewSudoku(sudokuInput_hard2)
     a.resolve()    
 }

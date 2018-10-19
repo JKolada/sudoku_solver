@@ -42,15 +42,19 @@ func (s *Sudoku) resolve() {
 
     if !s.checkIfFinishedAndCorrect() {
       fmt.Println("NOW BIG ONE\n")
-      //print9x9x9(s.solution, s.markerTable) //todo delete
+      print9x9x9(s.solution, s.markerTable) //todo delete
       second_lvl_algortihms_counter++
       s.gotChanged = s.solveBasingOnMarkersImplications()      
-      if !s.gotChanged {break}
+      if !s.gotChanged {
+        fmt.Printf("GAVE UP after %d simple loops and %d, 2nd level algorithms loops\n\n\n", first_lvl_algorithms_counter, second_lvl_algortihms_counter)
+        break
+      }
     } else {
-      fmt.Printf("Finished after %d simple loops and %d 2nd level algorithms loops\n\n\n", first_lvl_algorithms_counter, second_lvl_algortihms_counter)
+      fmt.Printf("Finished after %d simple loops and %d, 2nd level algorithms loops\n\n\n", first_lvl_algorithms_counter, second_lvl_algortihms_counter)
       break
     }
   }
   
+  print9x9x9(s.solution, s.markerTable) //todo delete
   print9x9(s.solution)
 }
