@@ -31,26 +31,26 @@ func (s *Sudoku) resolve() {
   for {
     for {
       s.gotChanged = s.solveBasedOnMarkers()
-      print9x9(s.solution)
-      print9x9x9(s.solution, s.markerTable) //todo delete
-      s.solveByUniqueCandidate()
+      //print9x9(s.solution)
+      //print9x9x9(s.solution, s.markerTable) //todo delete
+      s.gotChanged = s.solveByUniqueCandidate() || s.gotChanged
+      //print9x9(s.solution)
+      //print9x9x9(s.solution, s.markerTable) //todo delete
       first_lvl_algorithms_counter++
       if !s.gotChanged {break}
     }
-    fmt.Println("NOW BIG ONE\n")
 
-    if !(s.checkIfFinishedAndCorrect()) {
-      print9x9x9(s.solution, s.markerTable) //todo delete
+    if !s.checkIfFinishedAndCorrect() {
+      fmt.Println("NOW BIG ONE\n")
+      //print9x9x9(s.solution, s.markerTable) //todo delete
       second_lvl_algortihms_counter++
-      s.gotChanged = s.solveBasingOnPotentialityImplications()      
+      s.gotChanged = s.solveBasingOnMarkersImplications()      
       if !s.gotChanged {break}
     } else {
-      fmt.Println("Finished after %d simple loops and %d 2nd level algorithms loops", first_lvl_algorithms_counter, second_lvl_algortihms_counter)
+      fmt.Printf("Finished after %d simple loops and %d 2nd level algorithms loops\n\n\n", first_lvl_algorithms_counter, second_lvl_algortihms_counter)
+      break
     }
-
   }
-
-
-
-    print9x9(s.solution)
+  
+  print9x9(s.solution)
 }

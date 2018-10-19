@@ -108,7 +108,7 @@ func (s *Sudoku) solveBasedOnMarkers() bool {
           }  
         }
         if solutionFound != 0 {
-          fmt.Printf("new solution found, for a = %d, b = %d, and it is a %d\n", a+1, b+1, solutionFound)
+          //fmt.Printf("based on markers: new solution found, for a = %d, b = %d, and it is %d\n", a+1, b+1, solutionFound)
           s.fillSolutionCell(uint8(a), uint8(b), solutionFound)
           someSolutionFound = true
         } 
@@ -129,6 +129,11 @@ func (s *Sudoku) solveByUniqueCandidate() bool {
 
     for b_min = 0; b_min < 9; b_min += 3 {
       b_max = b_min + 2
+      
+      for l := range blockSolution {
+        blockSolution[l] = 0
+      }
+
 
       for a = a_min; a <= a_max; a++ {
         for b = b_min; b <= b_max; b++ {
@@ -138,9 +143,9 @@ func (s *Sudoku) solveByUniqueCandidate() bool {
              for c := range s.markerTable[a][b] {
               if s.markerTable[a][b][c] {
                 blockSolution[c]++
-                //fmt.Printf("a = %d, b = %d, c = %d, truth = %t\n", a+1, b+1, c+1, blockSolution[c])
+                //fmt.Printf("a = %d, b = %d, c = %d, truth = %d", a+1, b+1, c+1, blockSolution[c])
               }
-             }
+            }
           }
         }
       }  
@@ -154,7 +159,7 @@ func (s *Sudoku) solveByUniqueCandidate() bool {
                 // ..that still have some potential solutions:
                 if s.markerTable[a][b][sol_idx] {
                   ret = true
-                  fmt.Printf("FOUND UNIQUE CELL A=%d, b=%d, solution = %d\n", a+1, b+1, sol_idx+1)
+                  //fmt.Printf("unique candidate: new solution found, for a = %d, b = %d and it is %d\n", a+1, b+1, sol_idx+1)
                   s.fillSolutionCell(a, b, uint8(sol_idx + 1))                    
                 }
               }
@@ -189,7 +194,7 @@ func (s *Sudoku) solveByUniqueCandidate() bool {
 
 // FUUUUUUCK, HAVE TO RENAME IT, STILL DID NOT FIND HOW THE ALGORITHM IS CALLED
    // MAYBE I'VE INVENTED IT 3:-)
-func (s *Sudoku) solveBasingOnPotentialityImplications() bool {
+func (s *Sudoku) solveBasingOnMarkersImplications() bool {
   somethingChanged := false
   var row_potentiality [9][9]bool
   var column_potentiality [9][9]bool
@@ -235,6 +240,11 @@ func (s *Sudoku) solveBasingOnPotentialityImplications() bool {
         }
       }
 
+     /*
+      for a := range rowTruthCounter {
+         fmt.Printf("block (a:b) = (%d:%d), a = %d, counter  = %d\n", (a_min+1)/3, (b_min+1)/3, a+1, rowTruthCounter[a])
+      } */
+
       for a := range rowTruthCounter {
         // if found only one row with number potentiality
         if rowTruthCounter[a] == 1 {
@@ -244,8 +254,13 @@ func (s *Sudoku) solveBasingOnPotentialityImplications() bool {
               
               // and doing row possibility correction
               for d := 0; d < 9; d++ {
-                if (d < a_min || d > a_max) && s.markerTable[b][d][a] {
+                if (d < b_min || d > b_max) && s.markerTable[b][d][a] {
                   fmt.Printf("FOUND ROW THAT INFLUENCED CORRECTIONS = %d, number = %d\n", b+1, a+1)
+
+                  fmt.Printf("b_min = %d, b_max = %d, a = %d, b = %d\n", b_min+1, b_max+1, b+1, d+1)
+
+                  print9x9x9(s.solution, s.markerTable)
+
                   s.markerTable[b][d][a] = false
                   somethingChanged = true
                 }
@@ -275,8 +290,12 @@ func (s *Sudoku) solveBasingOnPotentialityImplications() bool {
             if column_potentiality[b][a] {
               // and doing column possibility correction
               for d := 0; d < 9; d++ {        
-                if (d < b_min || d > b_max) && s.markerTable[d][b][a] {
+                if (d < a_min || d > a_max) && s.markerTable[d][b][a] {
                   fmt.Printf("FOUND COLUMN THAT INFLUENCED CORRECTIONS = %d, number = %d\n", b+1, a+1)
+                  fmt.Printf("a_min = %d, a_max = %d, a = %d, b = %d", a_min+1, a_max+1, d+1, b+1)
+                  
+
+                  print9x9x9(s.solution, s.markerTable)
                   s.markerTable[d][b][a] = false
                   somethingChanged = true
                 }
