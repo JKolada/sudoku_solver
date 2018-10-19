@@ -181,16 +181,22 @@ func (s *Sudoku) solveBasedOnPotentialities() bool {
 */
 
 func (s *Sudoku) correctPotentialityImplications() bool {
-  var rows_potentiality [9][9]bool
-  var columns_potentiality [9][9]bool
+  var row_potentiality [9][9]bool
+  var column_potentiality [9][9]bool
+
+  rowTruthCounter := [9]int{0,0,0, 0,0,0, 0,0,0}
+  columnTruthCounter := [9]int{0,0,0, 0,0,0, 0,0,0}
  
   // Loop for every block with keeping the coordinates 
   // It would be more efficient to do this in one big nested loop algorithm, like below, than executing it for every block separately
-  for a_min := 0; a_min < 2; a_min += 3 {
+  for a_min := 0; a_min < 9; a_min += 3 {
     a_max := a_min + 2
 
-    for b_min := 0; b_min < 2; b_min += 3 {
+    for b_min := 0; b_min < 9; b_min += 3 {
       b_max := b_min + 2
+
+      fillFalse(&row_potentiality)
+      fillFalse(&column_potentiality)
 
       for a := a_min; a <= a_max; a++ {
         for b := b_min; b <= b_max; b++ {
@@ -198,55 +204,106 @@ func (s *Sudoku) correctPotentialityImplications() bool {
           if s.solution[a][b] == 0 {
             // ..that still have some potential solutions:
              for c := range s.potentialityTable[a][b] {
-               if s.potentialityTable[a][b][c] {
-                 rows_potentiality[a][c] = true
-                 columns_potentiality[b][c] = true
+              if s.potentialityTable[a][b][c] {
+                 row_potentiality[a][c] = true
+                 column_potentiality[b][c] = true
               }
              }
           }
         }
-      }
-    }
-  }
+      }  
       
-/*
-
-  for a := range s.solution {
-    for b := range s.solution[a] {
-           if s.solution[a][b] == 0 {
-               for c := range s.potentialityTable[a][b] {
-                 if s.potentialityTable[a][b][c] {
-                  rows_potentiality[a][c] = true
-                }
-               }
-           }
-           if s.solution[b][a] == 0 {
-               for c := range s.potentialityTable[b][a] {
-                 if s.potentialityTable[b][a][c] {
-                  columns_potentiality[b][c] = true
-                }
-               }
-           }   
-
-    }
-  }
-*/
-//rows_potentiality debug
-  fmt.Println("rows_potentiality debug")
-    for a := range rows_potentiality {
-      for c := range rows_potentiality[a] {
-        fmt.Print(rows_potentiality[a][c], " ")
+      for a := range rowTruthCounter {
+        rowTruthCounter[a] = 0
       }
-      fmt.Println()
-    }
-//column_potentiality debug
-fmt.Printf("\ncolumn_potentiality debug\n")
-    for b := range columns_potentiality {
-      for c := range columns_potentiality[b] {
-        fmt.Print(columns_potentiality[b][c], " ")
-      }
-      fmt.Println()
-    }
 
+      for a := a_min; a <= a_max; a++ {
+        for c := range row_potentiality[a] {
+          if row_potentiality[a][c] {
+            rowTruthCounter[c]++
+          }
+        }
+      }
+
+      for a := range rowTruthCounter {
+        // if found only one row with number potentiality
+        if rowTruthCounter[a] == 1 {
+          // looking for that row
+          for b := range row_potentiality {
+            if row_potentiality[b][a] {
+              fmt.Println("FOUND ROW TO CORRECT = ", b)
+              // and doing row possibility correction
+              for d := 0; d < 9; d++ {        
+                s.potentialityTable[b][d][a] = false
+              }
+              fmt.Println("after correction:")
+              print9x9x9(s.solution, s.potentialityTable) //todo delete
+            }
+          }
+        }
+      }
+
+      for a := range columnTruthCounter {
+        columnTruthCounter[a] = 0
+      }
+
+      for a := a_min; a <= a_max; a++ {
+        for c := range column_potentiality[a] {
+          if column_potentiality[a][c] {
+            columnTruthCounter[c]++
+          }
+        }
+      }
+
+      for a := range columnTruthCounter {
+        // if found only one column with number potentiality
+        if columnTruthCounter[a] == 1 {
+          // looking for that column
+          for b := range column_potentiality {
+            if column_potentiality[b][a] {
+              fmt.Println("FOUND COLUMN TO CORRECT = ", b)
+              // and doing column possibility correction
+              for d := 0; d < 9; d++ {        
+                s.potentialityTable[d][b][a] = false
+              }
+              fmt.Println("after correction:")
+              print9x9x9(s.solution, s.potentialityTable) //todo delete
+            }
+          }
+        }
+      }
+                      for a := range rowTruthCounter {
+                        fmt.Printf(" %d ", rowTruthCounter[a])
+                      }
+                    fmt.Println()
+                    //rows_potentiality debug
+                      fmt.Println("rows_potentiality debug")
+                        for a := range row_potentiality {
+                          for c := range row_potentiality[a] {
+                            fmt.Print(row_potentiality[a][c], " ")
+                          }
+                          fmt.Println()
+                        }
+
+                    //column truth counter
+                      for a := range columnTruthCounter {
+                        fmt.Printf(" %d ", columnTruthCounter[a])
+                      }
+                    fmt.Println()
+                    //column_potentiality debug
+                    fmt.Printf("\ncolumn_potentiality debug\n")
+                        for b := range column_potentiality {
+                          for c := range column_potentiality[b] {
+                            fmt.Print(column_potentiality[b][c], " ")
+                          }
+                          fmt.Println()
+                        }
+                    }
+
+    }
     return false
-}
+  }
+     
+//rows truth counter
+
+

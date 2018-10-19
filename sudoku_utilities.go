@@ -50,3 +50,11 @@ func getSudokuNumberToPrint(a uint8) string {
 func printSudokuLine() {
   fmt.Println("  -------------------------")
 }
+
+func fillFalse(tofill *[9][9]bool) {
+  for a := range tofill {
+    for b := range tofill[a] {
+      tofill[a][b] = false
+    }
+  }
+}
