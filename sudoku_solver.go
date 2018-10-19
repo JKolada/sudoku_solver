@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
-	"errors"
+  "fmt"
+  "errors"
 )
 
 type Sudoku struct {
@@ -37,7 +37,7 @@ func (s *Sudoku) resolve() {
     if !(s.checkIfFinishedAndCorrect()) {
 
 
-      //print9x9x9(s.solution, s.potentialityTable) //todo delete
+      print9x9x9(s.solution, s.potentialityTable) //todo delete
 
       s.correctPotentialityImplications()
     } else {
@@ -49,9 +49,9 @@ func (s *Sudoku) resolve() {
 }
 
 func (s *Sudoku) checkIfFinishedAndCorrect() bool {
-	var overall_check uint16
-	for a := range s.solution {
-	  var row_check, column_check uint8
+  var overall_check uint16
+  for a := range s.solution {
+    var row_check, column_check uint8
       for b := range s.solution[a] {
         row_check += s.solution[a][b]
         column_check += s.solution[b][a]
@@ -59,11 +59,11 @@ func (s *Sudoku) checkIfFinishedAndCorrect() bool {
         //fmt.Printf("a = %d, b = %d, row_check = %d, column_check = %d\n", a, b, row_check, column_check)
       }
       if row_check != 45 || column_check != 45 {
-       	return false
+         return false
       }
-	}
-	if overall_check != 405 {return false}
-	return true
+  }
+  if overall_check != 405 {return false}
+  return true
 }
 
 func (s *Sudoku) solve(a, b, solution uint8) {
@@ -76,14 +76,14 @@ func (s *Sudoku) initializePotentialityTable() {
     for b := range s.potentialityTable[a] {
       var temp bool
       if s.solution[a][b] != 0 {
-      	temp = false
+        temp = false
       } else {
-      	temp = true
+        temp = true
       }
-  	  for c := range s.potentialityTable[a][b] {
-  	     s.potentialityTable[a][b][c] = temp
+      for c := range s.potentialityTable[a][b] {
+         s.potentialityTable[a][b][c] = temp
       }
-    }  	
+    }    
   }
 }
 
@@ -94,7 +94,7 @@ func (s *Sudoku) correctPotentialityBasedOnCell(a, b uint8) {
   d_max := d_min + 3 
 
   if s.solution[a][b] == 0 {
-  	errors.New("the solution for the cell is not filled in")
+    errors.New("the solution for the cell is not filled in")
   }
 
   /* DEBUGGING
@@ -130,8 +130,8 @@ func (s *Sudoku) correctPotentialityTable() {
       if s.solution[a][b] != 0 {  
       /* it takes every filled cell and exludes the number
          as a potential solution
-         from corresponding row, column and block */    	
-      	s.correctPotentialityBasedOnCell(uint8(a), uint8(b))
+         from corresponding row, column and block */      
+        s.correctPotentialityBasedOnCell(uint8(a), uint8(b))
       }
     }
   }
@@ -142,21 +142,21 @@ func (s *Sudoku) solveBasedOnPotentialities() bool {
   for a := range s.potentialityTable {
     for b := range s.potentialityTable[a] {
       if s.solution[a][b] == 0 {
-	    var solutionFound uint8 = 0
-	    for c := range s.potentialityTable[a][b] {
-	      if s.potentialityTable[a][b][c] == true {
-	      	if solutionFound != 0 {
+      var solutionFound uint8 = 0
+      for c := range s.potentialityTable[a][b] {
+        if s.potentialityTable[a][b][c] == true {
+          if solutionFound != 0 {
               solutionFound = 0
-	      	  break
-	      	} 
-	      	solutionFound = uint8(c + 1)
-	      }	
-	    }
-	    if solutionFound != 0 {
+            break
+          } 
+          solutionFound = uint8(c + 1)
+        }  
+      }
+      if solutionFound != 0 {
           fmt.Printf("new solution found, for a = %d, b = %d, and it is a %d\n", a+1, b+1, solutionFound)
           s.solve(uint8(a), uint8(b), solutionFound)
           someSolutionFound = true
-	    } 
+      } 
       }
     }
   }
@@ -181,84 +181,71 @@ func (s *Sudoku) solveBasedOnPotentialities() bool {
 */
 
 func (s *Sudoku) correctPotentialityImplications() bool {
-   var rows_potentiality [9][9]bool
-   var columns_potentiality [9][9]bool
+  var rows_potentiality [9][9]bool
+  var columns_potentiality [9][9]bool
  
-   // Loop for every block with keeping the coordinates 
-   // It would be more efficient to do this in one big nested loop algorithm, like below, than executing it for every block separately
-   for a_min := 0; a_min < 2; a_min += 3 {
-       a_max := a_min + 2
+  // Loop for every block with keeping the coordinates 
+  // It would be more efficient to do this in one big nested loop algorithm, like below, than executing it for every block separately
+  for a_min := 0; a_min < 2; a_min += 3 {
+    a_max := a_min + 2
 
-       for b_min := 0; b_min < 2; b_min += 3 {
-           b_max := b_min + 2
+    for b_min := 0; b_min < 2; b_min += 3 {
+      b_max := b_min + 2
 
-			for a := a_min; a <= a_max; a++ {
-				for b := b_min; b <= b_max; b++ {
-		           if s.solution[a][b] == 0 {
-		           	  for c := range s.potentialityTable[a][b] {
-		           	  	if s.potentialityTable[a][b][c] {
-		                	rows_potentiality[a][c] = true
-		                	columns_potentiality[b][c] = true
-		                }
-		           	  }
-		           }
-		           /*
-		           if s.solution[b][a] == 0 {
-		           	  for c := range s.potentialityTable[b][a] {
-		           	  	if s.potentialityTable[b][a][c] {
-		                	columns_potentiality[b][c] = true
-		                }
-		           	  }
-		           }
-		           */
-
-				}
-			}
-
-
-
-
-       }
-
-   }
+      for a := a_min; a <= a_max; a++ {
+        for b := b_min; b <= b_max; b++ {
+          // interested in only not filled in cells
+          if s.solution[a][b] == 0 {
+            // ..that still have some potential solutions:
+             for c := range s.potentialityTable[a][b] {
+               if s.potentialityTable[a][b][c] {
+                 rows_potentiality[a][c] = true
+                 columns_potentiality[b][c] = true
+              }
+             }
+          }
+        }
+      }
+    }
+  }
       
 /*
 
-	for a := range s.solution {
-		for b := range s.solution[a] {
+  for a := range s.solution {
+    for b := range s.solution[a] {
            if s.solution[a][b] == 0 {
-           	  for c := range s.potentialityTable[a][b] {
-           	  	if s.potentialityTable[a][b][c] {
-                	rows_potentiality[a][c] = true
+               for c := range s.potentialityTable[a][b] {
+                 if s.potentialityTable[a][b][c] {
+                  rows_potentiality[a][c] = true
                 }
-           	  }
+               }
            }
            if s.solution[b][a] == 0 {
-           	  for c := range s.potentialityTable[b][a] {
-           	  	if s.potentialityTable[b][a][c] {
-                	columns_potentiality[b][c] = true
+               for c := range s.potentialityTable[b][a] {
+                 if s.potentialityTable[b][a][c] {
+                  columns_potentiality[b][c] = true
                 }
-           	  }
-           } 	
+               }
+           }   
 
-		}
-	}
+    }
+  }
 */
 //rows_potentiality debug
-	fmt.Println("rows_potentiality debug")
+  fmt.Println("rows_potentiality debug")
     for a := range rows_potentiality {
-    	for c := range rows_potentiality[a] {
-    		fmt.Print(rows_potentiality[a][c], " ")
-    	}
-    	fmt.Println()
+      for c := range rows_potentiality[a] {
+        fmt.Print(rows_potentiality[a][c], " ")
+      }
+      fmt.Println()
     }
 //column_potentiality debug
 fmt.Printf("\ncolumn_potentiality debug\n")
     for b := range columns_potentiality {
-    	for c := range columns_potentiality[b] {
-    		fmt.Print(columns_potentiality[b][c], " ")
-    	}
-    	fmt.Println()
+      for c := range columns_potentiality[b] {
+        fmt.Print(columns_potentiality[b][c], " ")
+      }
+      fmt.Println()
     }
 
     return false
