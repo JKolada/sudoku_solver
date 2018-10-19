@@ -25,26 +25,32 @@ func (s *Sudoku) resolve() {
     s.initializeMarkerTable()
     s.correctMarkerTable()    
     
-    a := 0
+    first_lvl_algorithms_counter := 0
+    second_lvl_algortihms_counter := 0
+
+  for {
     for {
       s.gotChanged = s.solveBasedOnMarkers()
       print9x9(s.solution)
       print9x9x9(s.solution, s.markerTable) //todo delete
-      s.gotChanged = s.solveByUniqueCandidate()
-      a++
+      s.solveByUniqueCandidate()
+      first_lvl_algorithms_counter++
       if !s.gotChanged {break}
     }
+    fmt.Println("NOW BIG ONE\n")
 
     if !(s.checkIfFinishedAndCorrect()) {
-
-      fmt.Printf("simple solution is not enough.. %d\n\n",a)
-
       print9x9x9(s.solution, s.markerTable) //todo delete
-
-      s.solveBasingOnPotentialityImplications()
+      second_lvl_algortihms_counter++
+      s.gotChanged = s.solveBasingOnPotentialityImplications()      
+      if !s.gotChanged {break}
     } else {
-      fmt.Println("CORRECTION FLAG: ", s.checkIfFinishedAndCorrect())
+      fmt.Println("Finished after %d simple loops and %d 2nd level algorithms loops", first_lvl_algorithms_counter, second_lvl_algortihms_counter)
     }
+
+  }
+
+
 
     print9x9(s.solution)
 }

@@ -119,7 +119,7 @@ func (s *Sudoku) solveBasedOnMarkers() bool {
 }
 
 func (s *Sudoku) solveByUniqueCandidate() bool {
-  var blockSolution [9]bool
+  var blockSolution [9]int
   var ret bool
 
   var a_min, b_min, a_max, b_max, a, b uint8
@@ -137,17 +137,16 @@ func (s *Sudoku) solveByUniqueCandidate() bool {
             // ..that still have some potential solutions:
              for c := range s.markerTable[a][b] {
               if s.markerTable[a][b][c] {
-                if blockSolution[c] {
-                  blockSolution[c] = false
-                } else {blockSolution[c] = true}
+                blockSolution[c]++
+                //fmt.Printf("a = %d, b = %d, c = %d, truth = %t\n", a+1, b+1, c+1, blockSolution[c])
               }
              }
           }
         }
       }  
-      
+
       for sol_idx := range blockSolution {
-        if blockSolution[sol_idx] {
+        if blockSolution[sol_idx] == 1 {
           for a = a_min; a <= a_max; a++ {
             for b = b_min; b <= b_max; b++ {
               // interested in only not filled in cells
@@ -156,7 +155,7 @@ func (s *Sudoku) solveByUniqueCandidate() bool {
                 if s.markerTable[a][b][sol_idx] {
                   ret = true
                   fmt.Printf("FOUND UNIQUE CELL A=%d, b=%d, solution = %d\n", a+1, b+1, sol_idx+1)
-                  s.fillSolutionCell(a, b, uint8(sol_idx))                    
+                  s.fillSolutionCell(a, b, uint8(sol_idx + 1))                    
                 }
               }
             }
