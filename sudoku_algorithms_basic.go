@@ -1,5 +1,8 @@
 package main
 
+
+
+
 import "fmt"
 
 const ROW_COLUMN_SUM = 45
@@ -83,6 +86,7 @@ func (s *Sudoku) checkIfSudokuIsCorrect() bool {
 
 func (s *Sudoku) fillSolutionCell(a, b, solution uint8) {
   s.solution[a][b] = solution
+  fillFalse9(&s.markerTable[a][b])
   s.correctMarkersBasedOnCellSolution(a, b)
 }
 
@@ -176,16 +180,14 @@ func (s *Sudoku) solveByUniqueCandidate() bool {
 
   var a_min, b_min, a_max, b_max, a, b uint8
 
+  //the easiest way to iterate through blocks and have stored their index boundaries
   for a_min = 0; a_min < 9; a_min += 3 {
     a_max = a_min + 2
 
     for b_min = 0; b_min < 9; b_min += 3 {
       b_max = b_min + 2
       
-      for l := range blockSolution {
-        blockSolution[l] = 0
-      }
-
+      fillZeroes9(&blockSolution)
       for a = a_min; a <= a_max; a++ {
         for b = b_min; b <= b_max; b++ {
           // interested in only not filled in cells

@@ -65,10 +65,34 @@ func print9x9x9Line() {
   fmt.Println("--------------------------------------------------|")
 }
 
-func fillFalse(tofill *[9][9]bool) {
+//////// FILLERS ////////
+
+func fillFalse9x9(tofill *[9][9]bool) {
   for a := range tofill {
     for b := range tofill[a] {
       tofill[a][b] = false
     }
   }
 }
+
+func fillFalse9(tofill *[9]bool) {
+  for a := range tofill {
+    tofill[a] = false
+  }
+}
+
+func fillZeroes9(tofill *[9]int) {
+  for a := range tofill {
+    tofill[a] = 0
+  }
+}
+
+func fillZeroes9x9(tofill *[9][9]int) {
+  for a := range tofill {
+    for b := range tofill[a] {
+      tofill[a][b] = 0
+    }
+  }
+}
+
+//////// END OF FILLERS ////////

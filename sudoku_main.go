@@ -41,14 +41,23 @@ func (s *Sudoku) resolve() {
     first_lvl_algorithms_counter := 0
     second_lvl_algortihms_counter := 0
 
+asd :=0
+
   for {
     for {
       gotChanged = s.solveBasedOnMarkers()
-      //print9x9(s.solution)
-      //print9x9x9(s.solution, s.markerTable) //todo delete
       gotChanged = s.solveByUniqueCandidate() || gotChanged
-      //print9x9(s.solution)
-      //print9x9x9(s.solution, s.markerTable) //todo delete
+
+      if !gotChanged {
+        print9x9(s.solution)
+        print9x9x9(s.solution, s.markerTable)
+        asd++
+        fmt.Printf("Podejście no%d, kołko łatwych algorytmów = %d\n\n", asd, first_lvl_algorithms_counter)
+        gotChanged = s.solveByNakedSubsets()
+        print9x9(s.solution)
+        print9x9x9(s.solution, s.markerTable)
+      } 
+
       first_lvl_algorithms_counter++
       if !gotChanged {break}
     }
@@ -57,7 +66,7 @@ func (s *Sudoku) resolve() {
       fmt.Println("NOW BIG ONE\n")
       print9x9x9(s.solution, s.markerTable) //todo delete
       second_lvl_algortihms_counter++
-      gotChanged = s.solveBasingOnMarkersImplications()      
+      gotChanged = s.solveBasingOnMarkersImplications()   
       if !gotChanged {
         if s.checkIfSudokuIsCorrect() {
           fmt.Printf("GAVE UP after %d simple loops and %d, 2nd level algorithms loops\n\n\n", first_lvl_algorithms_counter, second_lvl_algortihms_counter)

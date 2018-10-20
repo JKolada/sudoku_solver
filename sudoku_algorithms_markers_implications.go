@@ -26,12 +26,9 @@ import "fmt"
 // FUUUUUUCK, HAVE TO RENAME IT, STILL DID NOT FIND HOW THE ALGORITHM IS CALLED
    // MAYBE I'VE INVENTED IT 3:-)
 func (s *Sudoku) solveBasingOnMarkersImplications() bool {
-  somethingChanged := false
-  var row_potentiality [9][9]bool
-  var column_potentiality [9][9]bool
-
-  rowTruthCounter := [9]int{0,0,0, 0,0,0, 0,0,0}
-  columnTruthCounter := [9]int{0,0,0, 0,0,0, 0,0,0}
+  var somethingChanged bool
+  var rowMarkers,      columnMarkers      [9][9]bool
+  var rowTruthCounter, columnTruthCounter [9]int
  
   // Loop for every block with keeping the coordinates 
   // It would be more efficient to do this in one big nested loop algorithm, like below, than executing it for every block separately
@@ -41,8 +38,8 @@ func (s *Sudoku) solveBasingOnMarkersImplications() bool {
     for b_min := 0; b_min < 9; b_min += 3 {
       b_max := b_min + 2
 
-      fillFalse(&row_potentiality)
-      fillFalse(&column_potentiality)
+      fillFalse9x9(&rowMarkers)
+      fillFalse9x9(&columnMarkers)
 
       for a := a_min; a <= a_max; a++ {
         for b := b_min; b <= b_max; b++ {
@@ -51,21 +48,18 @@ func (s *Sudoku) solveBasingOnMarkersImplications() bool {
             // ..that still have some potential solutions:
              for c := range s.markerTable[a][b] {
               if s.markerTable[a][b][c] {
-                 row_potentiality[a][c] = true
-                 column_potentiality[b][c] = true
+                 rowMarkers[a][c] = true
+                 columnMarkers[b][c] = true
               }
              }
           }
         }
-      }  
-
-      for a := range rowTruthCounter {
-        rowTruthCounter[a] = 0
       }
 
+      fillZeroes9(&rowTruthCounter)
       for a := a_min; a <= a_max; a++ {
-        for c := range row_potentiality[a] {
-          if row_potentiality[a][c] {
+        for c := range rowMarkers[a] {
+          if rowMarkers[a][c] {
             rowTruthCounter[c]++
           }
         }
@@ -77,23 +71,19 @@ func (s *Sudoku) solveBasingOnMarkersImplications() bool {
       } */
 
       for a := range rowTruthCounter {
-        // if found only one row with number potentiality
+        // if found only one row with number marker
         if rowTruthCounter[a] == 1 {
           // looking for that row
-          for b := range row_potentiality {
-            if row_potentiality[b][a] {
+          for b := range rowMarkers {
+            if rowMarkers[b][a] {
               
               // and doing row possibility correction
               for d := 0; d < 9; d++ {
                 if (d < b_min || d > b_max) && s.markerTable[b][d][a] {
                   fmt.Printf("FOUND ROW THAT INFLUENCED CORRECTIONS = %d, number = %d\n", b+1, a+1)
-
                   fmt.Printf("b_min = %d, b_max = %d, a = %d, b = %d\n", b_min+1, b_max+1, b+1, d+1)
-
-
                   s.markerTable[b][d][a] = false
                   print9x9x9(s.solution, s.markerTable)
-
                   somethingChanged = true
                 }
               }
@@ -102,13 +92,10 @@ func (s *Sudoku) solveBasingOnMarkersImplications() bool {
         }
       }
 
-      for a := range columnTruthCounter {
-        columnTruthCounter[a] = 0
-      }
-
+      fillZeroes9(&columnTruthCounter)
       for b := b_min; b <= b_max; b++ {
-        for c := range column_potentiality[b] {
-          if column_potentiality[b][c] {
+        for c := range columnMarkers[b] {
+          if columnMarkers[b][c] {
             columnTruthCounter[c]++
           }
         }
@@ -118,8 +105,8 @@ func (s *Sudoku) solveBasingOnMarkersImplications() bool {
         // if found only one column with number potentiality
         if columnTruthCounter[a] == 1 {
           // looking for that column
-          for b := range column_potentiality {
-            if column_potentiality[b][a] {
+          for b := range columnMarkers {
+            if columnMarkers[b][a] {
               // and doing column possibility correction
               for d := 0; d < 9; d++ {        
                 if (d < a_min || d > a_max) && s.markerTable[d][b][a] {
