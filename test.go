@@ -1,5 +1,9 @@
 package main
 
+/*
+   File with 'main' function, only executing test input data
+*/
+
 // TEST SUDOKU
 var sudokuInput_easy = [9][9]uint8{
 	{1,0,2, 0,7,3, 6,4,0},
@@ -73,5 +77,7 @@ var sudokuInput_GOD = [9][9]uint8{
 
 func main() {
     a := NewSudoku(sudokuInput_hard2)
-    a.resolve()    
+    if a != nil {
+    	a.resolve()  
+    }  
 }

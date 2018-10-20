@@ -1,18 +1,17 @@
 package main
+/*  UTILITIES FUNCTIONS 
+    Mostly function used for console debbuing: printing data
+ */
 
 import (
   "fmt"
   "strconv"
 )
 
-/*  UTILITIES FUNCTIONS 
-    Mostly function used for console debbuing: printing data
- */
-
 // function printing sudoku table on a console
 func print9x9(sudoku [9][9]uint8) {
-  fmt.Println("    1 2 3   4 5 6   7 8 9")
-  printSudokuLine()
+  fmt.Println("b=> 1 2 3   4 5 6   7 8 9")
+  fmt.Println("a -------------------------")
   for a := range sudoku {
     fmt.Printf("%d | ", a+1)
     for b := range sudoku[a] {
@@ -20,7 +19,7 @@ func print9x9(sudoku [9][9]uint8) {
       if b%3 == 2 {fmt.Print("| ")}
     }
     fmt.Println()
-    if a%3 == 2 {printSudokuLine()}
+    if a%3 == 2 {fmt.Println("  -------------------------")}
   }
 }
 
