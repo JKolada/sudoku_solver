@@ -1,8 +1,5 @@
 package main
 
-
-
-
 import "fmt"
 
 const ROW_COLUMN_SUM = 45

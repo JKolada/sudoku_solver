@@ -45,17 +45,7 @@ func (s *Sudoku) resolve() {
     for {
       gotChanged = s.solveBasedOnMarkers()
       gotChanged = s.solveByUniqueCandidate() || gotChanged
-
-/*
-      if !gotChanged {
-        print9x9(s.solution)
-        print9x9x9(s.solution, s.markerTable)
-        gotChanged = s.solveByNakedSubsets()
-        print9x9(s.solution)
-        print9x9x9(s.solution, s.markerTable)
-      } */
-
-      gotChanged = s.solveByNakedSubsets() || gotChanged
+      gotChanged = s.solveByNakedAndLockedSubsets(2) || gotChanged
 
       first_lvl_algorithms_counter++
       if !gotChanged {break}
@@ -66,6 +56,8 @@ func (s *Sudoku) resolve() {
       print9x9x9(s.solution, s.markerTable) //todo delete
       second_lvl_algortihms_counter++
       gotChanged = s.solveBasingOnMarkersImplications()   
+
+
       if !gotChanged {
         if s.checkIfSudokuIsCorrect() {
           fmt.Printf("GAVE UP after %d simple loops and %d, 2nd level algorithms loops\n\n\n", first_lvl_algorithms_counter, second_lvl_algortihms_counter)
