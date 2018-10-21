@@ -41,29 +41,28 @@ func (s *Sudoku) resolve() {
     first_lvl_algorithms_counter := 0
     second_lvl_algortihms_counter := 0
 
-asd :=0
-
   for {
     for {
       gotChanged = s.solveBasedOnMarkers()
       gotChanged = s.solveByUniqueCandidate() || gotChanged
 
+/*
       if !gotChanged {
         print9x9(s.solution)
         print9x9x9(s.solution, s.markerTable)
-        asd++
-        fmt.Printf("Podejście no%d, kołko łatwych algorytmów = %d\n\n", asd, first_lvl_algorithms_counter)
         gotChanged = s.solveByNakedSubsets()
         print9x9(s.solution)
         print9x9x9(s.solution, s.markerTable)
-      } 
+      } */
+
+      gotChanged = s.solveByNakedSubsets() || gotChanged
 
       first_lvl_algorithms_counter++
       if !gotChanged {break}
     }
 
     if !s.checkIfFinishedAndCorrect() {
-      fmt.Println("NOW BIG ONE\n")
+      fmt.Printf(">>>>>>>>>>>> Started using 2nd level algorithms <<<<<<<<<<<<\n\n")
       print9x9x9(s.solution, s.markerTable) //todo delete
       second_lvl_algortihms_counter++
       gotChanged = s.solveBasingOnMarkersImplications()   
@@ -76,11 +75,19 @@ asd :=0
         break
       }
     } else {
-      fmt.Printf("Finished after %d simple loops and %d, 2nd level algorithms loops\n\n\n", first_lvl_algorithms_counter, second_lvl_algortihms_counter)
+      fmt.Printf("SUDOKU COMPLETED\nIt needed >%d< basic solving algorithm loops\n" ,first_lvl_algorithms_counter)
+      if second_lvl_algortihms_counter != 0 {
+        fmt.Printf("...and >%d< more complex algorithm loops\n\n", second_lvl_algortihms_counter)
+      } else {
+        if first_lvl_algorithms_counter < 4 {
+          fmt.Printf("... it was.. VERY EASY\n")
+        } else if first_lvl_algorithms_counter < 10 {
+          fmt.Printf("The level of puzzles was: MEDIUM\n")
+        }
+      }
       break
     }
   }
-  
-  print9x9x9(s.solution, s.markerTable) //todo delete
+
   print9x9(s.solution)
 }

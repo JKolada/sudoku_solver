@@ -1,6 +1,6 @@
 package main 
 
-import "fmt"
+//import "fmt"
 
 func (s *Sudoku) solveByNakedSubsets() bool {
    var sthChanged bool
@@ -27,11 +27,6 @@ func (s *Sudoku) solveByNakedSubsets() bool {
       }
    }
 
- 
-/*
-ej nie ma sensu isc dalej jak tylko 2 komorki sa wypelnione 2 markerami :|
-*/
-
    for a := range s.solution {
       for b := range s.solution[a] {
          if s.solution[a][b] == 0 {
@@ -44,60 +39,59 @@ ej nie ma sensu isc dalej jak tylko 2 komorki sa wypelnione 2 markerami :|
                   }
 
                   if similarRowCellCounter == 2 - 1  {
-                     fmt.Printf("row: komorka (%d:%d) jest taka sama jak (%d:%d)\n", a+1, b+1, a+1, c+1)
-                     fmt.Println(cellMarkers)
-                     fmt.Println(s.markerTable[a][c])
+                     similarRowCellCounter = 0
                      if rowSolvedCellCounter[a] != 2 {
+                        /*
+                        fmt.Printf("row:  cell (%d:%d) is the same like  (%d:%d)\n", a+1, b+1, a+1, c+1)
+                        fmt.Println(cellMarkers)
+                        fmt.Println(s.markerTable[a][c]) */
                         for col := range s.solution[a] {
                            if s.solution[a][col] == 0 && s.markerTable[a][col] != cellMarkers {
                               for numberMarker := range s.markerTable[a][col] {
                                  if cellMarkers[numberMarker] {
                                     s.markerTable[a][col][numberMarker] = false
                                     sthChanged = true
+   
                                  }
                               }
                            }
                         }
+                        //print9x9x9(s.solution, s.markerTable)
                      }
-
-        print9x9x9(s.solution, s.markerTable)
-                     similarRowCellCounter = 0
                   }
 
-                  if c != a && s.markerTable[c][a] == cellMarkers {
+                  if c != a && s.markerTable[c][b] == cellMarkers {
                      similarColumnCellCounter++
                   }
 
                   if similarColumnCellCounter == 2 - 1  {
-                     fmt.Printf("column: komorka (%d:%d) jest taka sama jak (%d:%d)\n", a+1, b+1, c+1, a+1)
-                     fmt.Println(cellMarkers)
-                     fmt.Println(s.markerTable[c][a])
+                     similarColumnCellCounter = 0
                      if columnSolvedCellCounter[b] != 2 {
+                        /*
+                        fmt.Printf("column: cell (%d:%d) is the same like (%d:%d)\n", a+1, b+1, c+1, b+1)
+                        fmt.Println(cellMarkers)
+                        fmt.Println(s.markerTable[c][b]) */
                         for row := range s.solution[a] {
                            if s.solution[row][b] == 0 && s.markerTable[row][b] != cellMarkers {
                               for numberMarker := range s.markerTable[row][b] {
                                  if cellMarkers[numberMarker] {
                                     s.markerTable[row][b][numberMarker] = false
                                     sthChanged = true
+
                                  }
                               }
                            }
                         }
+                        //print9x9x9(s.solution, s.markerTable)
                      }
-                             print9x9x9(s.solution, s.markerTable)
-                     similarColumnCellCounter = 0
                   }
                }
             }
          }
       }
    }
-
   return sthChanged
 }
-
-//func areTheSame()
-
 
 func (s *Sudoku) solveByLockedSubsets() bool {
   var ret bool

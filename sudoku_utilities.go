@@ -24,9 +24,15 @@ func print9x9(sudoku [9][9]uint8) {
 }
 
 func print9x9x9(sudoku [9][9]uint8, markerTable [9][9][9]bool) {
+  fmt.Printf("   ")
+  for a := 1; a < 10; a++ {
+    fmt.Printf(" \\\\\\ %d /// ", a)
+    if a%3 == 2 {fmt.Printf("|")}
+  }
+  fmt.Println()
   print9x9x9Line()
   for a := range markerTable {
-    fmt.Print("|")
+    fmt.Printf("%d |", a+1)
     for b := range markerTable[a] {
       fmt.Print(" ")
       if sudoku[a][b] != 0 {
@@ -61,7 +67,7 @@ func printSudokuLine() {
 }
 
 func print9x9x9Line() {
-  fmt.Print("|---------------------------------------------------")
+  fmt.Print("  |---------------------------------------------------")
   fmt.Println("--------------------------------------------------|")
 }
 
