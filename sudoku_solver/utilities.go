@@ -1,4 +1,4 @@
-package main
+package sudoku_solver
 /*  UTILITIES FUNCTIONS 
     Mostly function used for console debbuing: printing data
  */

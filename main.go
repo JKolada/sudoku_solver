@@ -1,4 +1,6 @@
 package main
+
+import "./sudoku_solver"
 /* File with 'main' function, only executing test input data 
 
 	available test inputs:
@@ -17,8 +19,8 @@ package main
 
 
 func main() {
-    a := NewSudoku(sudokuInput_hard2)
+    a := sudoku_solver.NewSudoku(sudokuInput_hard2)
     if a != nil {
-      a.resolve()  
-    }  
+      a.Resolve()  
+    }
 }

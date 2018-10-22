@@ -1,4 +1,4 @@
-package main
+package sudoku_solver
 
 import "fmt"
 
@@ -145,7 +145,7 @@ func (s *Sudoku) correctMarkerTable() {
    sudoku solving strategy ->
    Sole Candidate 
 */
-func (s *Sudoku) solveBasedOnMarkers() bool {  
+func (s *Sudoku) solveBasingOnMarkers() bool {  
   someSolutionFound := false
   for a := range s.markerTable {
     for b := range s.markerTable[a] {
@@ -218,6 +218,50 @@ func (s *Sudoku) solveByUniqueCandidate() bool {
         }
       }
     }
+  }
+  return ret
+}
+
+func (s *Sudoku) solveByHiddenSingles() bool {
+  var rowMarkers,      columnMarkers      [9]int
+  var ret bool
+  
+
+  for a := range s.markerTable {
+    for b := range s.markerTable[a] {
+      for c := range s.markerTable[a][b] {
+
+        if s.solution[a][b]==0 && s.markerTable[a][b][c] {
+          rowMarkers[c]++
+        }
+        if s.solution[b][a]==0 && s.markerTable[b][a][c] {
+          columnMarkers[c]++
+        }
+      }
+    }
+
+    for c := range rowMarkers {
+      if rowMarkers[c] == 1 {
+        for b := range s.markerTable[a] {
+          if s.solution[a][b]==0 && s.markerTable[a][b][c] {
+            s.fillSolutionCell(uint8(a), uint8(b), uint8(c+1))
+            ret = true
+          }
+        }
+      }
+
+      if columnMarkers[c] == 1 {
+        for b := range s.markerTable[a] {
+          if s.solution[b][a]==0 && s.markerTable[b][a][c] {
+            s.fillSolutionCell(uint8(b), uint8(a), uint8(c+1))
+            ret = true
+          }
+        }
+      }
+    }
+
+    fillZeroes9(&rowMarkers)
+    fillZeroes9(&columnMarkers)
   }
   return ret
 }

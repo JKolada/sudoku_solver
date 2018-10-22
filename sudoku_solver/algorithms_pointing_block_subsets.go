@@ -1,8 +1,8 @@
-package main 
+package sudoku_solver
 
 import "fmt"
 
-/* The most heavy algorithm, as far
+/* Probably the most heavy algorithm, as far
    It looks for potential number
    that can be wrote down in one block only in one column or row.
    
@@ -22,10 +22,7 @@ import "fmt"
    so we are exluding it from row in markers table, from Y positions.
 */
 
-
-// FUUUUUUCK, HAVE TO RENAME IT, STILL DID NOT FIND HOW THE ALGORITHM IS CALLED
-   // MAYBE I'VE INVENTED IT 3:-)
-func (s *Sudoku) solveBasingOnMarkersImplications() bool {
+func (s *Sudoku) solveByPointingBlockSubsets() bool {
   var somethingChanged bool
   var rowMarkers,      columnMarkers      [9][9]bool
   var rowTruthCounter, columnTruthCounter [9]int
