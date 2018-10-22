@@ -1,6 +1,6 @@
 package sudoku_solver
 
-import "fmt"
+//import "fmt"
 
 /* Probably the most heavy algorithm, as far
    It looks for potential number
@@ -77,10 +77,12 @@ func (s *Sudoku) solveByPointingBlockSubsets() bool {
               // and doing row possibility correction
               for d := 0; d < 9; d++ {
                 if (d < b_min || d > b_max) && s.markerTable[b][d][a] {
+                  /*
                   fmt.Printf("FOUND ROW THAT INFLUENCED CORRECTIONS = %d, number = %d\n", b+1, a+1)
                   fmt.Printf("b_min = %d, b_max = %d, a = %d, b = %d\n", b_min+1, b_max+1, b+1, d+1)
+                  //print9x9x9(s.solution, s.markerTable) 
+                  */
                   s.markerTable[b][d][a] = false
-                  print9x9x9(s.solution, s.markerTable)
                   somethingChanged = true
                 }
               }
@@ -107,11 +109,12 @@ func (s *Sudoku) solveByPointingBlockSubsets() bool {
               // and doing column possibility correction
               for d := 0; d < 9; d++ {        
                 if (d < a_min || d > a_max) && s.markerTable[d][b][a] {
+                  /*
                   fmt.Printf("FOUND COLUMN THAT INFLUENCED CORRECTIONS = %d, number = %d\n", b+1, a+1)
-                  fmt.Printf("a_min = %d, a_max = %d, a = %d, b = %d", a_min+1, a_max+1, d+1, b+1)
-                                    
+                  fmt.Printf("a_min = %d, a_max = %d, a = %d, b = %d", a_min+1, a_max+1, d+1, b+1)                  
+                  //print9x9x9(s.solution, s.markerTable)
+                  */
                   s.markerTable[d][b][a] = false
-                  print9x9x9(s.solution, s.markerTable)
                   somethingChanged = true
                 }
               }

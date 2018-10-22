@@ -47,6 +47,7 @@ func (s *Sudoku) Resolve() {
       gotChanged = s.solveByUniqueCandidate() || gotChanged
       gotChanged = s.solveByNakedAndLockedSubsets(2) || gotChanged
       gotChanged = s.solveByHiddenSingles() || gotChanged
+      gotChanged = s.solveByPointingPairs() || gotChanged
 
       first_lvl_algorithms_counter++
       if !gotChanged {break}

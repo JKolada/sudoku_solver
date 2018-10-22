@@ -2,6 +2,19 @@ package sudoku_solver
 
 import "fmt"
 
+/*
+File contains functions listed below:
+checkIfFinishedAndCorrect
+checkIfSudokuIsCorrect
+fillSolutionCell
+initializeMarkerTable
+correctMarkersBasedOnCellSolution
+correctMarkerTable
+solveBasingOnMarkers
+solveByUniqueCandidate
+solveByHiddenSingles
+*/
+
 const ROW_COLUMN_SUM = 45
 const ALL_SUDOKU_CELL_SUM = 405
 
@@ -80,7 +93,10 @@ func (s *Sudoku) checkIfSudokuIsCorrect() bool {
 }
 
 
-
+/*
+  Helper function that signs a number as a cell solution
+  and corrects the marker table
+*/
 func (s *Sudoku) fillSolutionCell(a, b, solution uint8) {
   s.solution[a][b] = solution
   fillFalse9(&s.markerTable[a][b])
@@ -103,6 +119,10 @@ func (s *Sudoku) initializeMarkerTable() {
   }
 }
 
+/*
+  Function goes through all blocks/rows/columns separately (and in mentioned sequence)
+  and deletes markers (signs them as false) related to a solution cell that was given as an input 
+*/
 func (s *Sudoku) correctMarkersBasedOnCellSolution(a, b uint8) {
   c_min := (a/3) * 3
   c_max := c_min + 3
@@ -141,8 +161,7 @@ func (s *Sudoku) correctMarkerTable() {
   }
 }
 
-/* The next step in usage of
-   sudoku solving strategy ->
+/* Sudoku solving strategy ->
    Sole Candidate 
 */
 func (s *Sudoku) solveBasingOnMarkers() bool {  
@@ -171,6 +190,9 @@ func (s *Sudoku) solveBasingOnMarkers() bool {
   return someSolutionFound
 }
 
+/* Sudoku solving strategy ->
+   Unique Candidate 
+*/
 func (s *Sudoku) solveByUniqueCandidate() bool {
   var blockSolution [9]int
   var ret bool
@@ -222,6 +244,9 @@ func (s *Sudoku) solveByUniqueCandidate() bool {
   return ret
 }
 
+/* Sudoku solving strategy ->
+   Hidden Singles
+*/
 func (s *Sudoku) solveByHiddenSingles() bool {
   var rowMarkers,      columnMarkers      [9]int
   var ret bool
