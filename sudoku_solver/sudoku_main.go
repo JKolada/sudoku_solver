@@ -47,14 +47,17 @@ func (s *Sudoku) Resolve() {
       gotChanged = s.solveByUniqueCandidate() || gotChanged
       gotChanged = s.solveByNakedAndLockedSubsets(2) || gotChanged
       gotChanged = s.solveByHiddenSingles() || gotChanged
-      gotChanged = s.solveByPointingPairs() || gotChanged
+      
+      s.solveByPointingPairs()
+
+      s.solveByHiddenPairs()
 
       first_lvl_algorithms_counter++
       if !gotChanged {break}
     }
     
-    print9x9(s.solution)
-    print9x9x9(s.solution, s.markerTable) //todo delete
+    //print9x9(s.solution)
+    //print9x9x9(s.solution, s.markerTable) //todo delete
 
     if !s.checkIfFinishedAndCorrect() {
       fmt.Printf(">>>>>>>>>>>> Started using 2nd level algorithms <<<<<<<<<<<<\n\n")

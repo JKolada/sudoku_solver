@@ -2,9 +2,7 @@ package sudoku_solver
 
 //import "fmt"
 
-func (s *Sudoku) solveByPointingPairs() bool {
-  var ret bool
-
+func (s *Sudoku) solveByPointingPairs() {
   //Counters if there exists any same marker in the corresponding row/column
   //but with exclusion of block for which cell we are currently iterating (basing on a,b)
   var rowMarkerCounter, columnMarkerCounter [9]int
@@ -13,12 +11,12 @@ func (s *Sudoku) solveByPointingPairs() bool {
   //print9x9x9(s.solution, s.markerTable)
 
   for a := range s.solution {
-  	a_min := (a/3)*3       // minimal index of a block row
-  	a_max := (a/3)*3 + 2   // maximal index of a block row
+  	a_min := (a/3)*3     // minimal index of a block row
+  	a_max := a_min + 2   // maximal index of a block row
   	
   	for b := range s.solution[a] {
-      b_min := (b/3)*3     // minimal index of a block column
-      b_max := (b/3)*3 + 2 // maximal index of a block column
+      b_min := (b/3)*3   // minimal index of a block column
+      b_max := b_min + 2 // maximal index of a block column
 
   		if s.solution[a][b] == 0 {
   			for c := range s.markerTable[a][b] {
@@ -79,6 +77,4 @@ func (s *Sudoku) solveByPointingPairs() bool {
   		}
   	}
   }
-
-  return ret
 }
