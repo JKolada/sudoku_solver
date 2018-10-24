@@ -16,14 +16,17 @@ type Sudoku struct {
    /* Copy of inputTable where will be cell solutions wrote down*/
    solution       [9][9] uint8
 
+   isCorrect bool
+
+   isSolved bool
+
 }
 
-/* constructor, printing input table*/
+/* constructor */
 func NewSudoku(inputTable [9][9]uint8) *Sudoku {
     s := new(Sudoku)
     s.inputTable = inputTable
     s.solution = s.inputTable
-    print9x9(s.solution)
     if !s.checkIfSudokuIsCorrect() {
       fmt.Println("The input is incorrect\n\n")
       return nil
@@ -31,64 +34,93 @@ func NewSudoku(inputTable [9][9]uint8) *Sudoku {
     return s
 }
 
-/* main method, executing sudoku solving*/
-func (s *Sudoku) Resolve() {
-    var gotChanged bool
+func(s *Sudoku) ResolveByDeduction() {
+  fmt.Printf("Sudoku received to solve:\n")
+  print9x9(s.inputTable)
+  //++++++++++++++++++++++//
+  s.ResolveWithoutPrinting()
+  //++++++++++++++++++++++//
+  s.sumUp()
+}
 
-    s.initializeMarkerTable()
-    s.correctMarkerTable()    
-    
-    first_lvl_algorithms_counter := 0
-    second_lvl_algortihms_counter := 0
+func(s *Sudoku) sumUp() {
+  if s.isSolved {
+    fmt.Printf("\nSudoku solved:\n")    
+    print9x9(s.solution)
+  } else if s.isCorrect {
+    fmt.Printf("GAVE UP. AIN'T NOBODY CAN SOLVE THIS!\n")    
+    print9x9(s.solution)
+    print9x9x9(s.solution, s.markerTable)
+  } else {
+    fmt.Println("There is a logical problem with sudoku solving. It could be poorly designed") 
+    print9x9(s.solution)   
+    print9x9x9(s.solution, s.markerTable)
+  }
+}
+
+func (s* Sudoku) ResolveByBrute_Row() {
+  fmt.Printf("Sudoku received to solve:\n")
+  print9x9(s.inputTable)
+  //++++++++++++++++++++++//
+  s.solveByRowBacktracking()  
+  //++++++++++++++++++++++//
+  s.sumUp()
+}
+
+func (s* Sudoku) ResolveByBrute_Block() {
+  fmt.Printf("Sudoku received to solve:\n")
+  print9x9(s.inputTable)
+  //++++++++++++++++++++++//
+  s.solveByBlockBacktracking()  
+  //++++++++++++++++++++++//
+  s.sumUp()
+}
+
+
+
+
+/* main method, executing sudoku solving*/
+func (s *Sudoku) ResolveWithoutPrinting() {
+  var gotChanged bool
+
+  s.initializeMarkerTable()
+  s.correctMarkerTable()    
 
   for {
     for {
+
+      // BASIC ALGORITHMS
+
+
       gotChanged = s.solveBasingOnMarkers()
       gotChanged = s.solveByUniqueCandidate() || gotChanged
       gotChanged = s.solveByNakedAndLockedSubsets(2) || gotChanged
       gotChanged = s.solveByHiddenSingles() || gotChanged
       
       s.solveByPointingPairs()
-
       s.solveByHiddenPairs()
 
-      first_lvl_algorithms_counter++
       if !gotChanged {break}
     }
     
     //print9x9(s.solution)
     //print9x9x9(s.solution, s.markerTable) //todo delete
 
-    if !s.checkIfFinishedAndCorrect() {
-      fmt.Printf(">>>>>>>>>>>> Started using 2nd level algorithms <<<<<<<<<<<<\n\n")
-      print9x9x9(s.solution, s.markerTable) //todo delete
-      second_lvl_algortihms_counter++
+    s.isSolved = s.checkIfFinishedAndCorrect()
+    if !s.isSolved {
+
       gotChanged = s.solveByPointingBlockSubsets()   
       //gotChanged = s.solveByNakedAndLockedSubsets(3) || gotChanged
 
+
       if !gotChanged {
-        if s.checkIfSudokuIsCorrect() {
-          fmt.Printf("GAVE UP after %d simple loops and %d, 2nd level algorithms loops\n\n\n", first_lvl_algorithms_counter, second_lvl_algortihms_counter)
-        } else {
-          fmt.Println("There is a logical problem with sudoku solving. It could be poorly designed")
+        s.isCorrect = s.checkIfSudokuIsCorrect()
+        if !s.isCorrect {
+          break
         }
-        break
       }
     } else {
-      fmt.Printf("SUDOKU COMPLETED\nIt needed >%d< basic solving algorithm loops\n" ,first_lvl_algorithms_counter)
-      /*
-      if second_lvl_algortihms_counter != 0 {
-        fmt.Printf("...and >%d< more complex algorithm loops\n\n", second_lvl_algortihms_counter)
-      } else {
-        if first_lvl_algorithms_counter < 4 {
-          fmt.Printf("... it was.. VERY EASY\n")
-        } else if first_lvl_algorithms_counter < 10 {
-          fmt.Printf("The level of puzzles was: MEDIUM\n")
-        }
-      } */
       break
     }
   }
-
-  print9x9(s.solution)
 }
