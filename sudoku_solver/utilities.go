@@ -11,7 +11,7 @@ import (
 // function printing sudoku table on a console
 func print9x9(sudoku [9][9]uint8) {
   fmt.Println("b=> 1 2 3   4 5 6   7 8 9")
-  fmt.Println("a -------------------------")
+  fmt.Println("a +-------+-------+-------+")
   for a := range sudoku {
     fmt.Printf("%d | ", a+1)
     for b := range sudoku[a] {
@@ -19,7 +19,7 @@ func print9x9(sudoku [9][9]uint8) {
       if b%3 == 2 {fmt.Print("| ")}
     }
     fmt.Println()
-    if a%3 == 2 {fmt.Println("  -------------------------")}
+    if a%3 == 2 {fmt.Println("  +-------+-------+-------+")}
   }
 }
 
@@ -62,13 +62,9 @@ func getSudokuNumberToPrint(a uint8) string {
   }
 }
 
-func printSudokuLine() {
-  fmt.Println("  -------------------------")
-}
-
 func print9x9x9Line() {
-  fmt.Print("  |---------------------------------------------------")
-  fmt.Println("--------------------------------------------------|")
+  fmt.Print("  |---------------------------------+-----------------")
+  fmt.Println("----------------+---------------------------------|")
 }
 
 //////// FILLERS ////////

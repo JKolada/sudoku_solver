@@ -1,6 +1,6 @@
 package sudoku_solver 
 
-//import "fmt"
+// import "fmt"
 
 func (s *Sudoku) solveByHiddenPairs() bool {
   // We are looking for two same markers that are placed in both of two cells
@@ -167,11 +167,11 @@ no			Some row situation:
 					 	  	if s.markerTable[b2][a][firstCellMarker] &&
 					 	  	   s.markerTable[b2][a][r] &&
 					 	  	   b2 != b {
-		              //fmt.Printf("second cell (a,b) = (%d,%d), r2 = %d\n",b2+1,a+1,r+1)
 					 	  	  markerChanged = true
 					 	  	  ret = true
 					 	  	  /*
 					 	  	  print9x9x9(s.solution, s.markerTable)
+	    						fmt.Printf("a = %d, column markers = %v\n unfilled counters = %v\n", a+1, columnMarkerCounter, columnUnfilledCounter)
 	    						fmt.Printf("WOHOO b=%d, a1=%d, a2=%d, r1=%d, r2=%d\n", a+1, b+1, b2+1, r+1, firstCellMarker+1)
 						      */
 						      for r2 := range s.markerTable[a][b] {
@@ -195,7 +195,10 @@ no			Some row situation:
 			  }
 			}
 	  }
-	  if markerChanged {s.solveBasingOnMarkers()}
+	  if markerChanged {
+ 			ret = s.solveBasingOnMarkers() || ret
+ 		  markerChanged = false
+ 		}
  	}
 
 
@@ -203,8 +206,8 @@ no			Some row situation:
  	for a := range blockMarkerCounter {
  		for b := range blockMarkerCounter[a] {
 
- 			for c := range blockMarkerCounter[a][b] {
- 				if blockMarkerCounter[a][b][c] == 2 {
+ 			for c := range blockMarkerCounter[a/3][b/3] {
+ 				if blockMarkerCounter[a/3][b/3][c] == 2 {
  					block2MarkerCounter++
  				} 				
  			}
@@ -226,8 +229,8 @@ no			Some row situation:
  				for col := col_min; col <= col_max; col++ {
 				 	for row := row_min; row <= row_max; row++ {
 
-  					for c := range blockMarkerCounter[a][b] {
-  						if blockMarkerCounter[a][b][c] == 2 {
+  					for c := range blockMarkerCounter[a/3][b/3] {
+  						if blockMarkerCounter[a/3][b/3][c] == 2 {
   							
   							if s.markerTable[row][col][c] &&
   								 firstCellMarker != -1 &&
@@ -242,10 +245,10 @@ no			Some row situation:
 								 	  	   (firstBlockCellRowIndex != row2 || firstBlockCellColIndex != col2) {
 								 	  	  markerChanged = true
 								 	  	  ret = true
-								 	  	  /*
-								 	  	  print9x9x9(s.solution, s.markerTable)
-				    						fmt.Printf("1:(a,b)=(%d,%d) 2:(a,b)=(%d,%d), r1 = %d, r2 = %d\n", row+1, col+1, row2+1,col2+1, firstCellMarker+1, c+1)
-									      */
+								 	  	  
+								 	  	  //print9x9x9(s.solution, s.markerTable)
+				    						//fmt.Printf("1:(a,b)=(%d,%d) 2:(a,b)=(%d,%d), r1 = %d, r2 = %d\n", row+1, col+1, row2+1,col2+1, firstCellMarker+1, c+1)
+									      
 									      for r := range s.markerTable[a][b] {
 									      	if r != firstCellMarker &&
 									      	   r != c {
@@ -268,6 +271,10 @@ no			Some row situation:
   					}
 				 	}
  				}
+ 			}
+ 			if markerChanged {
+ 				ret = s.solveBasingOnMarkers() || ret
+ 				markerChanged = false
  			}
  		}
  	}

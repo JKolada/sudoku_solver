@@ -111,7 +111,8 @@ func (s *Sudoku) solveByNakedAndLockedSubsets(similarCellCount int) bool {
                         /*
                         fmt.Printf("row:  cell (%d:%d) is the same like  (%d:%d)\n", a+1, b+1, a+1, c+1)
                         fmt.Println(cellMarkers)
-                        fmt.Println(s.markerTable[a][c])*/
+                        fmt.Println(s.markerTable[a][c])
+                        */
                         for col := range s.solution[a] {
                            if s.solution[a][col] == 0 && s.markerTable[a][col] != cellMarkers {
                               for numberMarker := range s.markerTable[a][col] {
@@ -138,7 +139,8 @@ func (s *Sudoku) solveByNakedAndLockedSubsets(similarCellCount int) bool {
                         /*
                         fmt.Printf("column: cell (%d:%d) is the same like (%d:%d)\n", a+1, b+1, c+1, b+1)
                         fmt.Println(cellMarkers)
-                        fmt.Println(s.markerTable[c][b]) */
+                        fmt.Println(s.markerTable[c][b])
+                        */
                         for row := range s.solution[a] {
                            if s.solution[row][b] == 0 && s.markerTable[row][b] != cellMarkers {
                               for numberMarker := range s.markerTable[row][b] {

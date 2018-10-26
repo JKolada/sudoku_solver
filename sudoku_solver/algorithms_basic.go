@@ -82,13 +82,33 @@ func (s *Sudoku) checkIfSudokuIsCorrect() bool {
 
       for c := range block_counter {
         if block_counter[c] > 1 {
-          fmt.Printf("There is too many numbers %d in block (%d:%d)\n\n", c+1, (a_min+1)/3+1, (b_min+1)/3+1)
+          fmt.Printf("There is too many numbers %d in block (%d,%d)\n\n", c+1, (a_min+1)/3+1, (b_min+1)/3+1)
           return false
         } 
         block_counter[c] = 0
       }
     }
   }
+
+  var oneMarkerOn bool
+  for a := range s.markerTable {
+    for b := range s.markerTable[a] {
+      oneMarkerOn = false
+      if s.solution[a][b] == 0 {
+        for c := range s.markerTable[a][b] {
+          if s.markerTable[a][b][c] {
+            oneMarkerOn = true
+          }
+        }
+        if !oneMarkerOn {
+          fmt.Printf("There is problem with markerTable in cell (a,b) = (%d,%d)\n",a+1,b+1)
+          fmt.Printf("It can be caused by some algorithm impementation\n\n")
+          return false
+        }
+      }
+    }
+  }
+
   return true
 }
 
@@ -215,7 +235,7 @@ func (s *Sudoku) solveByUniqueCandidate() bool {
              for c := range s.markerTable[a][b] {
               if s.markerTable[a][b][c] {
                 blockSolution[c]++
-                //fmt.Printf("a = %d, b = %d, c = %d, truth = %d", a+1, b+1, c+1, blockSolution[c])
+                //fmt.Printf("a = %d, b = %d, c = %d, truth = %d\n", a+1, b+1, c+1, blockSolution[c])
               }
             }
           }
