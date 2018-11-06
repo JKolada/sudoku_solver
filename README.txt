@@ -1,7 +1,7 @@
 DESCRIPTION AND REMARKS:
 The application aims to solve quickly any sudoku puzzle.
 
-At first, it uses all implemented deduction algorithms with no blind guessing. If the puzzle is too complicated (but still valid), the backtracking algorithm is used. It is a "brute force" algorithm that iterates through all cells in sudoku, row by row, trying to match any number as potential solution. If it sees that it is impossible to fill another cell, it comes back to the previous one and tries an another possible cell value.
+At first, it uses all implemented deduction algorithms with no blind guessing. If the puzzle is too complicated (but still valid), the backtracking algorithm is used. It is a "brute force" algorithm that iterates through all cells in sudoku, row by row, trying to match any number as a potential solution. If it sees that it is impossible to fill another cell, the cell solution is cleared and algorithm goes back to the previous cell and tries an another possible cell value. If all cells are filled with
 
 Remarks:
 - Of course the main plan for the application is to solve any puzzle efficiently with no brute force. There still are a lot of complex deduction algorithms waiting to be implemented.
@@ -77,7 +77,7 @@ Very Easy   0,0000046        0,0000056        0,0000199
 Medium      0,0003938        0,0006071        0,0000323
 Hard        0,0014799        0,0021580        0,0000967
 God         0,0253537        0,0175594        x
-ALL LEVELS  0,0099284        0,0074219        x (cant solve the God, so it does not matter)
+ALL LEVELS  0,0099284        0,0074219        x (cant solve any from the god level, so it does not matter)
 
 
 ---------------------------------------------------
