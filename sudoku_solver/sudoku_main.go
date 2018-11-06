@@ -41,7 +41,7 @@ func(s *Sudoku) Resolve() {
   //++++++++++++++++++++++//
   s.ResolveWithoutPrinting()
   if !s.isSolved {
-    fmt.Println("\nNeed to use backtracking algorithm...")
+    fmt.Println("\nNeed to use backtracking algorithm\n")
     s.SolveByRowBacktracking()
   }
   //++++++++++++++++++++++//
@@ -49,7 +49,7 @@ func(s *Sudoku) Resolve() {
 }
 
 func(s *Sudoku) ResolveByDeduction() {
-  fmt.Printf("Sudoku received to solve:\n")
+  fmt.Printf(" Sudoku received to solve:\n")
   print9x9(s.inputTable)
   //++++++++++++++++++++++//
   s.ResolveWithoutPrinting()
@@ -58,7 +58,7 @@ func(s *Sudoku) ResolveByDeduction() {
 }
 
 func (s *Sudoku) ResolveByBrute_Row() {
-  fmt.Printf("Sudoku received to solve:\n")
+  fmt.Printf(" Sudoku received to solve:\n")
   print9x9(s.inputTable)
   //++++++++++++++++++++++//
   s.SolveByRowBacktracking()  
@@ -67,7 +67,7 @@ func (s *Sudoku) ResolveByBrute_Row() {
 }
 
 func (s *Sudoku) ResolveByBrute_Block() {
-  fmt.Printf("Sudoku received to solve:\n")
+  fmt.Printf(" Sudoku received to solve:\n")
   print9x9(s.inputTable)
   //++++++++++++++++++++++//
   s.SolveByBlockBacktrackingVER2()
@@ -92,6 +92,7 @@ func (s *Sudoku) ResolveWithoutPrinting() {
         gotChanged = s.solveBasingOnMarkers()
         gotChanged = s.solveByUniqueCandidate() || gotChanged
         gotChanged = s.solveByHiddenSingles() || gotChanged
+
         if !gotChanged {break}
       }
 
@@ -102,10 +103,14 @@ func (s *Sudoku) ResolveWithoutPrinting() {
         solveByNakedAndLockedSubsets
         solveByPointingPairs
         solveByHiddenPairs
+
+        In this case, if some of algorithms listed below has changed any marker,
+        we are coming back to the basic algorithms loop, immediately, without executing the rest of them
       */
-      gotChanged = s.solveByNakedAndLockedSubsets(2) || gotChanged
-      s.solveByPointingPairs()
-      gotChanged = s.solveByHiddenPairs() || gotChanged
+      gotChanged = s.solveByNakedAndLockedSubsets(2)
+      if !gotChanged {gotChanged = s.solveByPointingPairs()}
+      if !gotChanged {gotChanged = s.solveByHiddenPairs()}
+
       if !gotChanged {break}
     }    
 
@@ -129,6 +134,7 @@ func (s *Sudoku) ResolveWithoutPrinting() {
 
     if !gotChanged {
       s.isCorrect = s.checkIfSudokuIsCorrect()
+      s.isSolved = s.checkIfFinishedAndCorrect()
       break        
     }
   }
@@ -137,7 +143,7 @@ func (s *Sudoku) ResolveWithoutPrinting() {
 func(s *Sudoku) sumUp() {
 
   if s.isSolved {
-    fmt.Printf("\nSudoku solved:\n")    
+    fmt.Printf("\n Sudoku solved:\n")    
     print9x9(s.solution)
   } else if s.isCorrect {
     fmt.Printf("GAVE UP. AIN'T NOBODY CAN SOLVE THIS!\n")    

@@ -33,6 +33,7 @@ func main() {
 	if len(os.Args) == 2 {
 	  inputCorrect, parsedInput := getInput(os.Args[1])
 	  if inputCorrect {
+	  	doLogo()
 			a := sudoku_solver.NewSudoku(parsedInput)
 			if a != nil {
 			  a.Resolve()
@@ -64,15 +65,24 @@ func getInput(arg string) (bool, [9][9]uint8) {
 	}
 }
 
+func doLogo() {
+	fmt.Printf("\n      ╔═╗┬ ┬┌┬┐┌─┐┬┌─┬ ┬  ┌─┐┌─┐┬ ┬  ┬┌─┐╦═╗\n")
+	fmt.Printf(  "      ╚═╗│ │ │││ │├┴┐│ │  └─┐│ ││ └┐┌┘├┤ ╠╦╝\n")
+	fmt.Printf(  "      ╚═╝└─┘─┴┘└─┘┴ ┴└─┘  └─┘└─┘┴─┘└┘ └─┘╩╚═\n\n")
+}
+
 func doIntro() {
-  fmt.Println("To receive a solution for a specific sudoku puzzle,")
-	fmt.Println("write all numbers of the sudoku in one line as an argument in the application execution.")
-	fmt.Println("Use blank space or zero number for not-filled cells.\n")
-	fmt.Println("Lines below execute the application for the same puzzle.")
-	fmt.Println("sudoku_solver.exe \"       3  1   26  5  7    9  29  1   7       4   3  5  9   48      6   23  5   7 \"")
-  fmt.Println("sudoku_solver.exe 000000030010002600500700009002900100070000000400030050090004800000060002300500070\n")
-	fmt.Println("Demonstration of solving a hardcoded sudoku that was given as input:\n")
-	a := sudoku_solver.NewSudoku(sudokuInput_easy)
+	doLogo()
+	fmt.Printf(" Hello, JakubKoladaDev@gmail.com here, enjoy using sudoku solver\n\n")
+  fmt.Printf(" To receive a solution for a specific sudoku puzzle,\n")
+	fmt.Printf(" write all numbers of the sudoku in one line as an argument in the an application execution.\n")
+	fmt.Printf(" Use blank space or zero number for not-filled cells.\n\n")
+	fmt.Printf(" Lines below execute the application for the same puzzle.\n")
+	fmt.Printf(" sudoku_solver.exe \"       3  1   26  5  7    9  29  1   7       4   3  5  9   48      6   23  5   7 \"\n")
+  fmt.Printf(" sudoku_solver.exe 000000030010002600500700009002900100070000000400030050090004800000060002300500070\n\n")
+	fmt.Printf(" Demonstration of solving a hardcoded sudoku that was given as input:\n\n")
+
+	a := sudoku_solver.NewSudoku(sudokuInput_hard2)
 	if a != nil {
 	  a.ResolveByDeduction()
 	}

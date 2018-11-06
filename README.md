@@ -5,7 +5,7 @@
 
    Sudoku Solver tries to solve puzzles by deduction algorithms, with no blind guessing. If the puzzle complexity is very high, the backtracking algorithm is used.
 
-   Backtracking algorithm is a *brute force* algorithm that iterates through all cells in sudoku, row by row, trying to match any number as a potential solution. If it sees that it is impossible to fill another cell, the cell solution is cleared and algorithm goes back to the previous cell and tries an another possible cell value.
+   `Backtracking algorithm is a *brute force* algorithm that iterates through all cells in sudoku, row by row, trying to match any number as a potential solution. If it sees that it is impossible to fill another cell, the cell solution is cleared and algorithm goes back to the previous cell and tries an another possible cell value.`
 
 #### Remarks:
 The main plan for the application is to solve any puzzle efficiently with no brute force. There still are a lot of complex deduction algorithms waiting to be implemented.
@@ -30,19 +30,19 @@ sudoku_solver.exe "       3  1   26  5  7    9  29  1   7       4   3  5  9   48
 sudoku_solver.exe 000000030010002600500700009002900100070000000400030050090004800000060002300500070
 ```
 
-##### The commands resolves the following sudoku puzzles:
+##### The commands resolve the following sudoku puzzle:
 
-Column number | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+Column no. | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 ------------- | - | - | - | - | - | - | - | - | -
-1 | _ | _ | _ | _ | _ | _ | _ | 3 | _
-2 | _ | 1 | _ | _ | _ | 2 | 6 | _ | _
-3 | 5 | _ | _ | 7 | _ | _ | _ | _ | 9
-4 | _ | _ | 2 | 9 | _ | _ | 1 | _ | _
-5 | _ | 7 | _ | _ | _ | _ | _ | _ | _
-6 | 4 | _ | _ | _ | 3 | _ | _ | 5 | _
-7 | _ | 9 | _ | _ | _ | 4 | 8 | _ | _
-8 | _ | _ | _ | _ | 6 | _ | _ | _ | 2
-9 | 3 | _ | _ | 5 | _ | _ | _ | 7 | _
+**row no. 1** | _ | _ | _ | _ | _ | _ | _ | 3 | _
+**row no. 2** | _ | 1 | _ | _ | _ | 2 | 6 | _ | _
+**row no. 3** | 5 | _ | _ | 7 | _ | _ | _ | _ | 9
+**row no. 4** | _ | _ | 2 | 9 | _ | _ | 1 | _ | _
+**row no. 5** | _ | 7 | _ | _ | _ | _ | _ | _ | _
+**row no. 6** | 4 | _ | _ | _ | 3 | _ | _ | 5 | _
+**row no. 7** | _ | 9 | _ | _ | _ | 4 | 8 | _ | _
+**row no. 8** | _ | _ | _ | _ | 6 | _ | _ | _ | 2
+**row no. 9** | 3 | _ | _ | 5 | _ | _ | _ | 7 | _
 
 
 

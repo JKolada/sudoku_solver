@@ -55,6 +55,105 @@ func (s *Sudoku) SolveByRowBacktracking() {
   }
 }
 
+///////////////////////////////////////////////////////////////////////
+/*
+Below there is much easier to understand block backtracking algorithm.
+The complexity is much lower that version 1 and it gained 3% of efficiency
+*/
+
+type point struct {
+  a int
+  b int
+}
+
+func (s *Sudoku) SolveByBlockBacktrackingVER2() {
+  var pointMap [81]point
+  
+  for a := range pointMap {
+    pointMap[a] = point{a : a%9/3 + a/27*3, b: a/9%3*3 + a%3}
+    //fmt.Printf("point no%d (a,b) = (%d, %d)\n", a+1, pointMap[a].a, pointMap[a].b)
+  }
+
+  for idx := 0; idx < 81; idx++ {
+    //fmt.Println("starting loop with ", idx+1)
+    if s.inputTable[pointMap[idx].a][pointMap[idx].b] == 0 &&
+       !s.tryNextSolution(pointMap[idx].a, pointMap[idx].b) {
+      idx_down := idx - 1
+      for ; idx_down > -1; idx_down-- {
+        //fmt.Printf("Going down with (a,b)=(%d,%d)\n",pointMap[idx_down].a+1, pointMap[idx_down].b+1)
+        if s.inputTable[pointMap[idx_down].a][pointMap[idx_down].b] == 0 &&
+          s.tryNextSolution(pointMap[idx_down].a, pointMap[idx_down].b) {
+          idx = idx_down
+          break
+        }
+      }
+    }
+    //fmt.Println("leaving loop with ", idx+1)
+    //print9x9(s.solution)
+  }
+
+  s.isSolved = s.checkIfFinishedAndCorrect()
+  if !s.isSolved {
+    s.isCorrect = s.checkIfSudokuIsCorrect()
+  }
+}
+
+
+
+func(s *Sudoku) tryNextSolution(a_idx, b_idx int) bool {
+  //fmt.Printf("Trying to fill cell (a,b)=(%d,%d)\n", a_idx+1, b_idx+1)
+  for marker := s.solution[a_idx][b_idx] + 1; marker < 10; marker++ {          
+    if s.canIfillIt(marker, a_idx, b_idx) {
+      s.solution[a_idx][b_idx] = marker
+      return true
+    }
+  }
+  s.solution[a_idx][b_idx] = 0
+  //fmt.Printf("NOTHING FOR (%d,%d)\n", a_idx+1, b_idx+1)
+  return false
+}
+
+func(s *Sudoku) canIfillIt(marker uint8, a_idx, b_idx int) bool{
+  // checking row and column
+  for idx := 0; idx < 9; idx++ {
+    if idx != b_idx && s.solution[a_idx][idx] == marker {
+      //fmt.Printf("%d marker NOT for %d col\n",marker,idx+1)
+      return false
+    }
+    if idx != a_idx && s.solution[idx][b_idx] == marker {
+
+      //fmt.Printf("%d marker NOT for %d row\n",marker,idx+1 )
+      return false
+    }
+  }
+
+  // checking block
+  a_min := a_idx/3 * 3
+  a_max := a_min + 2
+  b_min := b_idx/3 * 3
+  b_max := b_min + 2
+
+  for a := a_min; a <= a_max; a++ {
+    for b := b_min; b <= b_max; b++ {
+      if (a != a_idx || b != b_idx) && s.solution[a][b] == marker {
+        //fmt.Printf("%d marker NOT for (%d,%d) block\n",marker,a_idx+1,b_idx+1)
+        return false
+      }
+    }
+  }
+  //fmt.Printf("%d marker for (a,b)=(%d,%d)\n",marker,a_idx+1,b_idx+1)
+  return true
+}
+
+
+
+//////////////// NOT USED CODE BELOW, BUT THE ALGORITHM IS WORKING ///////////////////////
+
+/*
+ First version of block backtracting. The algorithm logic is the same as the version 2,
+ but thing how it looks is SICK. It slightly less efficient than version one
+*/
+
 func (s *Sudoku) SolveByBlockBacktracking() {
   var prev_a, prev_b int
 
@@ -161,95 +260,6 @@ func (s *Sudoku) SolveByBlockBacktracking() {
         }
       }
     }
-  }
-
-  s.isSolved = s.checkIfFinishedAndCorrect()
-  if !s.isSolved {
-    s.isCorrect = s.checkIfSudokuIsCorrect()
-  }
-}
-
-func(s *Sudoku) tryNextSolution(a_idx, b_idx int) bool {
-  //fmt.Printf("Trying to fill cell (a,b)=(%d,%d)\n", a_idx+1, b_idx+1)
-  for marker := s.solution[a_idx][b_idx] + 1; marker < 10; marker++ {          
-    if s.canIfillIt(marker, a_idx, b_idx) {
-      s.solution[a_idx][b_idx] = marker
-      return true
-    }
-  }
-  s.solution[a_idx][b_idx] = 0
-  //fmt.Printf("NOTHING FOR (%d,%d)\n", a_idx+1, b_idx+1)
-  return false
-}
-
-func(s *Sudoku) canIfillIt(marker uint8, a_idx, b_idx int) bool{
-  // checking row and column
-	for idx := 0; idx < 9; idx++ {
-		if idx != b_idx && s.solution[a_idx][idx] == marker {
-      //fmt.Printf("%d marker NOT for %d col\n",marker,idx+1)
-			return false
-		}
-		if idx != a_idx && s.solution[idx][b_idx] == marker {
-
-      //fmt.Printf("%d marker NOT for %d row\n",marker,idx+1 )
-			return false
-		}
-	}
-
-  // checking block
-  a_min := a_idx/3 * 3
-  a_max := a_min + 2
-  b_min := b_idx/3 * 3
-  b_max := b_min + 2
-
-  for a := a_min; a <= a_max; a++ {
-  	for b := b_min; b <= b_max; b++ {
-  		if (a != a_idx || b != b_idx) && s.solution[a][b] == marker {
-        //fmt.Printf("%d marker NOT for (%d,%d) block\n",marker,a_idx+1,b_idx+1)
-        return false
-      }
-  	}
-  }
-  //fmt.Printf("%d marker for (a,b)=(%d,%d)\n",marker,a_idx+1,b_idx+1)
-  return true
-}
-
-///////////////////////////////////////////////////////////////////////
-/*
-Below there is much easier to understand block backtracking algorithm.
-The complexity is much lower that version 1, but results are still very similar
-soooo it does not matter which one we will be using
-*/
-
-type point struct {
-  a int
-  b int
-}
-
-func (s *Sudoku) SolveByBlockBacktrackingVER2() {
-  var pointMap [81]point
-  
-  for a := range pointMap {
-    pointMap[a] = point{a : a%9/3 + a/27*3, b: a/9%3*3 + a%3}
-    //fmt.Printf("point no%d (a,b) = (%d, %d)\n", a+1, pointMap[a].a, pointMap[a].b)
-  }
-
-  for idx := 0; idx < 81; idx++ {
-    //fmt.Println("starting loop with ", idx+1)
-    if s.inputTable[pointMap[idx].a][pointMap[idx].b] == 0 &&
-       !s.tryNextSolution(pointMap[idx].a, pointMap[idx].b) {
-      idx_down := idx - 1
-      for ; idx_down > -1; idx_down-- {
-        //fmt.Printf("Going down with (a,b)=(%d,%d)\n",pointMap[idx_down].a+1, pointMap[idx_down].b+1)
-        if s.inputTable[pointMap[idx_down].a][pointMap[idx_down].b] == 0 &&
-          s.tryNextSolution(pointMap[idx_down].a, pointMap[idx_down].b) {
-          idx = idx_down
-          break
-        }
-      }
-    }
-    //fmt.Println("leaving loop with ", idx+1)
-    //print9x9(s.solution)
   }
 
   s.isSolved = s.checkIfFinishedAndCorrect()

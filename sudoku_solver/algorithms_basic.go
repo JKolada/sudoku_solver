@@ -185,7 +185,7 @@ func (s *Sudoku) correctMarkerTable() {
    Sole Candidate 
 */
 func (s *Sudoku) solveBasingOnMarkers() bool {  
-  someSolutionFound := false
+  var someSolutionFound bool
   for a := range s.markerTable {
     for b := range s.markerTable[a] {
       if s.solution[a][b] == 0 {
@@ -215,7 +215,7 @@ func (s *Sudoku) solveBasingOnMarkers() bool {
 */
 func (s *Sudoku) solveByUniqueCandidate() bool {
   var blockSolution [9]int
-  var ret bool
+  var someSolutionFound bool
 
   var a_min, b_min, a_max, b_max, a, b uint8
 
@@ -224,9 +224,10 @@ func (s *Sudoku) solveByUniqueCandidate() bool {
     a_max = a_min + 2
 
     for b_min = 0; b_min < 9; b_min += 3 {
-      b_max = b_min + 2
+      b_max = b_min + 2      
       
       fillZeroes9(&blockSolution)
+
       for a = a_min; a <= a_max; a++ {
         for b = b_min; b <= b_max; b++ {
           // interested in only not filled in cells
@@ -250,7 +251,7 @@ func (s *Sudoku) solveByUniqueCandidate() bool {
               if s.solution[a][b] == 0 {
                 // ..that still have some potential solutions:
                 if s.markerTable[a][b][sol_idx] {
-                  ret = true
+                  someSolutionFound = true
                   //fmt.Printf("unique candidate: new solution found, for a = %d, b = %d and it is %d\n", a+1, b+1, sol_idx+1)
                   s.fillSolutionCell(a, b, uint8(sol_idx + 1))                    
                 }
@@ -261,7 +262,7 @@ func (s *Sudoku) solveByUniqueCandidate() bool {
       }
     }
   }
-  return ret
+  return someSolutionFound
 }
 
 /* Sudoku solving strategy ->
@@ -269,9 +270,12 @@ func (s *Sudoku) solveByUniqueCandidate() bool {
 */
 func (s *Sudoku) solveByHiddenSingles() bool {
   var rowMarkers,      columnMarkers      [9]int
-  var ret bool  
+  var someSolutionFound bool  
 
   for a := range s.markerTable {
+    fillZeroes9(&rowMarkers)
+    fillZeroes9(&columnMarkers)
+
     for b := range s.markerTable[a] {
       for c := range s.markerTable[a][b] {
 
@@ -289,7 +293,7 @@ func (s *Sudoku) solveByHiddenSingles() bool {
         for b := range s.markerTable[a] {
           if s.solution[a][b]==0 && s.markerTable[a][b][c] {
             s.fillSolutionCell(uint8(a), uint8(b), uint8(c+1))
-            ret = true
+            someSolutionFound = true
           }
         }
       }
@@ -298,14 +302,11 @@ func (s *Sudoku) solveByHiddenSingles() bool {
         for b := range s.markerTable[a] {
           if s.solution[b][a]==0 && s.markerTable[b][a][c] {
             s.fillSolutionCell(uint8(b), uint8(a), uint8(c+1))
-            ret = true
+            someSolutionFound = true
           }
         }
       }
     }
-
-    fillZeroes9(&rowMarkers)
-    fillZeroes9(&columnMarkers)
-  }
-  return ret
+  }  
+  return someSolutionFound
 }

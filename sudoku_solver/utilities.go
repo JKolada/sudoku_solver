@@ -10,29 +10,29 @@ import (
 
 // function printing sudoku table on a console
 func print9x9(sudoku [9][9]uint8) {
-  fmt.Println("b=> 1 2 3   4 5 6   7 8 9")
-  fmt.Println("a +-------+-------+-------+")
+  fmt.Println(" b=> 1 2 3   4 5 6   7 8 9")
+  fmt.Println(" a +-------+-------+-------+")
   for a := range sudoku {
-    fmt.Printf("%d | ", a+1)
+    fmt.Printf(" %d | ", a+1)
     for b := range sudoku[a] {
       fmt.Print(getSudokuNumberToPrint(sudoku[a][b]))
       if b%3 == 2 {fmt.Print("| ")}
     }
     fmt.Println()
-    if a%3 == 2 {fmt.Println("  +-------+-------+-------+")}
+    if a%3 == 2 {fmt.Println("   +-------+-------+-------+")}
   }
 }
 
 func print9x9x9(sudoku [9][9]uint8, markerTable [9][9][9]bool) {
-  fmt.Printf("   ")
+  fmt.Printf("    ")
   for a := 1; a < 10; a++ {
-    fmt.Printf(" \\\\\\ %d /// ", a)
+    fmt.Printf("  \\\\\\ %d /// ", a)
     if a%3 == 2 {fmt.Printf("|")}
   }
   fmt.Println()
   print9x9x9Line()
   for a := range markerTable {
-    fmt.Printf("%d |", a+1)
+    fmt.Printf(" %d |", a+1)
     for b := range markerTable[a] {
       fmt.Print(" ")
       if sudoku[a][b] != 0 {
@@ -63,7 +63,7 @@ func getSudokuNumberToPrint(a uint8) string {
 }
 
 func print9x9x9Line() {
-  fmt.Print("  |---------------------------------+-----------------")
+  fmt.Print("   |---------------------------------+-----------------")
   fmt.Println("----------------+---------------------------------|")
 }
 
