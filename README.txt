@@ -1,11 +1,16 @@
+DESCRIPTION AND REMARKS:
 The application aims to solve quickly any sudoku puzzle.
+
 At first, it uses all implemented deduction algorithms with no blind guessing. If the puzzle is too complicated (but still valid), the backtracking algorithm is used. It is a "brute force" algorithm that iterates through all cells in sudoku, row by row, trying to match any number as potential solution. If it sees that it is impossible to fill another cell, it comes back to the previous one and tries an another possible cell value.
 
 Remarks:
 - Of course the main plan for the application is to solve any puzzle efficiently with no brute force. There still are a lot of complex deduction algorithms waiting to be implemented.
 - Benchmark results can change, especially for deduction algorithms, because there was no efficiency correction implemented.
 
-How to use an app:
+---------------------------------------------------
+HOW TO USE IT, AS A CONSOLE APP AND A GOLANG MODULE
+
+How to use an app as a console app:
 
 1. Build the application with "go build" command in the folder. 
 
@@ -17,8 +22,21 @@ How to use an app:
 \go_sudoku>go_sudoku.exe "       3  1   26  5  7    9  29  1   7       4   3  5  9   48      6   23  5   7 "
 \go_sudoku>go_sudoku.exe 000000030010002600500700009002900100070000000400030050090004800000060002300500070
 
+How to use an app as a golang module:
 
+import "sudoku_solver" // use with the right path of the sudoku_solver folder
 
+// and in code
+			a := sudoku_solver.NewSudoku(parsedInput) 
+			// -> initialize the main struct with [9][9]uint8 table where any blank space to fill in sudoku is 0
+			if a != nil {
+			  a.Resolve()
+			  // -> the constructor method returns sudoku only if input sudoku is correct
+			  // then it is possible to execute the sudoku solver algorithms sequence
+			}
+
+---------------------------------------------------
+PLANS FOR FUTURE
 
 Plan for the updates:
 - Finishing the X-Wing algorithm
@@ -29,7 +47,8 @@ Plan for the updates:
 
 
 -----------------------------------------------------------
-Benchmark results
+BENCHMARK RESULTS
+
 ThinkPad T540p
 i7-4710MQ CPU @ 2,50GHz
 16,0 GB RAM
@@ -60,6 +79,9 @@ Hard        0,0014799        0,0021580        0,0000967
 God         0,0253537        0,0175594        x
 ALL LEVELS  0,0099284        0,0074219        x (cant solve the God, so it does not matter)
 
+
+---------------------------------------------------
+BENCHMARK EXECUTION
 To run benchmarks on your machine, just execute the line below:
 \go_sudoku>go test -bench=.
 
