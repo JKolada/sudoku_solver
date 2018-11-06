@@ -39,11 +39,7 @@ func main() {
 			}
 		}
 	} else {
-		fmt.Println("HARDCODED DEMONSTRATION:")
-		a := sudoku_solver.NewSudoku(sudokuInput_easy)
-		if a != nil {
-		  a.ResolveByDeduction()
-		}
+		doIntro()
 	}
 }
 
@@ -65,5 +61,19 @@ func getInput(arg string) (bool, [9][9]uint8) {
 		return false, result
 	} else {
 		return true, result
+	}
+}
+
+func doIntro() {
+  fmt.Println("To receive a solution for a specific sudoku puzzle,")
+	fmt.Println("write all numbers of the sudoku in one line as an argument in the application execution.")
+	fmt.Println("Use blank space or zero number for not-filled cells.\n")
+	fmt.Println("Lines below execute the application for the same puzzle.")
+	fmt.Println("sudoku_solver.exe \"       3  1   26  5  7    9  29  1   7       4   3  5  9   48      6   23  5   7 \"")
+  fmt.Println("sudoku_solver.exe 000000030010002600500700009002900100070000000400030050090004800000060002300500070\n")
+	fmt.Println("Demonstration of solving a hardcoded sudoku that was given as input:\n")
+	a := sudoku_solver.NewSudoku(sudokuInput_easy)
+	if a != nil {
+	  a.ResolveByDeduction()
 	}
 }
