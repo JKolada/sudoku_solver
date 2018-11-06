@@ -269,8 +269,7 @@ func (s *Sudoku) solveByUniqueCandidate() bool {
 */
 func (s *Sudoku) solveByHiddenSingles() bool {
   var rowMarkers,      columnMarkers      [9]int
-  var ret bool
-  
+  var ret bool  
 
   for a := range s.markerTable {
     for b := range s.markerTable[a] {

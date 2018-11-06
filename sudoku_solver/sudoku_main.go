@@ -80,15 +80,30 @@ func (s *Sudoku) ResolveByBrute_Block() {
 /* main method, executing sudoku solving*/
 func (s *Sudoku) ResolveWithoutPrinting() {
   var gotChanged bool
-  s.solveByXWing()
 
   for {
     for {
-      // BASIC ALGORITHMS
-      gotChanged = s.solveBasingOnMarkers()
-      gotChanged = s.solveByUniqueCandidate()
+      for {
+        /* BASIC ALGORITHMS (least complex)
+          solveBasingOnMarkers - solution found if there is only one number marked for the cell
+          solveByUniqueCandidate - solution found if the cell is only one with specific number marked for the block
+          solveByHiddenSingles - solution found if the cell is only one with specific number marked for the row and the column
+         */
+        gotChanged = s.solveBasingOnMarkers()
+        gotChanged = s.solveByUniqueCandidate() || gotChanged
+        gotChanged = s.solveByHiddenSingles() || gotChanged
+        if !gotChanged {break}
+      }
+
+      s.isSolved = s.checkIfFinishedAndCorrect()
+      if s.isSolved {break}
+
+      /* AVERAGE ALGORITHMS (it can take some time)
+        solveByNakedAndLockedSubsets
+        solveByPointingPairs
+        solveByHiddenPairs
+      */
       gotChanged = s.solveByNakedAndLockedSubsets(2) || gotChanged
-      gotChanged = s.solveByHiddenSingles() || gotChanged
       s.solveByPointingPairs()
       gotChanged = s.solveByHiddenPairs() || gotChanged
       if !gotChanged {break}
@@ -98,21 +113,23 @@ func (s *Sudoku) ResolveWithoutPrinting() {
     //print9x9x9(s.solution, s.markerTable) //todo delete
 
     s.isSolved = s.checkIfFinishedAndCorrect()
-    if !s.isSolved {
+    if s.isSolved {break}
 
+    /* COMPLEX ALGORITHMS
+      solveByPointingBlockSubsets
+      solveByXWing
+      solveBySwordfish
+      solveByNakedAndLockedSubsets
+    */
+    gotChanged = s.solveByPointingBlockSubsets()
+    //s.solveByXWing()
+    //s.solveBySwordfish()
+    s.checkIfSudokuIsCorrect()
+    //gotChanged = s.solveByNakedAndLockedSubsets(3) || gotChanged
 
-      gotChanged = s.solveByPointingBlockSubsets()
-      s.solveByXWing()
-      //s.solveBySwordfish()
-      s.checkIfSudokuIsCorrect()
-      //gotChanged = s.solveByNakedAndLockedSubsets(3) || gotChanged
-
-      if !gotChanged {
-        s.isCorrect = s.checkIfSudokuIsCorrect()
-        break        
-      }
-    } else {
-      break
+    if !gotChanged {
+      s.isCorrect = s.checkIfSudokuIsCorrect()
+      break        
     }
   }
 }

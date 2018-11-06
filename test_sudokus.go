@@ -165,10 +165,6 @@ var sudokuInput_GOD3 = [9][9]uint8{
   {3,0,0, 1,0,0, 2,0,0},
 }
 
-
-
-
-
 /// THE MOST COMPLEX
 
 var sudokuInput_HARDEST = [9][9]uint8{
