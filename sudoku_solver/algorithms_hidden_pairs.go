@@ -28,7 +28,7 @@ func (s *Sudoku) solveByHiddenPairs() bool {
   var firstBlockCellColIndex, firstBlockCellRowIndex int
 
 
-/*			Algorithm explained by example
+/*			Algorithm explained by example 
 col
 no			Some row situation:
 1.			  4 5   7   <- markers
