@@ -18,6 +18,7 @@ solveByHiddenSingles
 const ROW_COLUMN_SUM = 45
 const ALL_SUDOKU_CELL_SUM = 405
 
+
 func (s *Sudoku) checkIfFinishedAndCorrect() bool {
   var overall_check uint16
   for a := range s.solution {

@@ -64,6 +64,29 @@ import "sudoku_solver" // use with the right path of the sudoku_solver folder
 ...
 ```
 
+### Algorithms implemented and related go functions:
+#### Basic algorithms, `.\sudoku_solver\algorithms_basic.go` file content
+* Unique candidate - *solveByUniqueCandidate()* method
+* Hidden singles - *solveByHiddenSingles()* method
+
+**The file also consists of functions:**
+* *solveBasingOnMarkers()* method - looks for the cells that have only one marker checked
+* *checkIfFinishedAndCorrect()* - counts the sum of every row and column and checks if it equals 45 - useful in quick check if filled sudoku solution is correct
+* *checkIfSudokuIsCorrect()* - checks if there is no the same value in row/column/block for every cell -
+it is useful in sudoku validity check
+* *fillSolutionCell()* - simply fills the cell with result, executes *correctMarkersBasedOnCellSolution()*
+* *initializeMarkerTable()* - it initializes the markers for input sudoku, deletes all markers for already filled cells 
+* *correctMarkersBasedOnCellSolution()* - deletes markers for corresponding row/column/block for given solution cell
+* *correctMarkerTable()* - executes *correctMarkersBasedOnCellSolution()* for every cell, part of the sudoku initialization before solving algorithm sequence execution
+
+#### Average complexity algorithms
+* Naked subsets & locked subsets - `.\sudoku_solver\algorithms_naked_and_locked_subsets.go`
+* Pointing pairs - `.\sudoku_solver\algorithms_pointing_pairs.go`
+* Hidden pairs - `.\sudoku_solver\algorithms_hidden_pairs.go`
+
+#### High complexity algorithms
+* Pointing block subsets - `.\sudoku_solver\algorithms_pointing_block_subsets.go`
+ 
 ## Future plans:
 
 #### Plan for the updates:
@@ -79,31 +102,31 @@ import "sudoku_solver" // use with the right path of the sudoku_solver folder
 
 The most updated results are in excel file in main repository folder.
 
-Sudoku level | Puzzle number | Backtracking by row [s] | Backtracking by block [s] | Deduction algorithms [s]
------------- | ------------- | ----------------------- | ------------------------- | ------------------------
-Very Easy  | 1     |     0,0000046    |    0,0000056    |    0,0000199
-Medium     | 2     |     0,0003938    |    0,0006071    |    0,0000323
-Hard       | 3     |     0,0001613    |    0,0002212    |    0,0000745
-Hard       | 4     |     0,0006751    |    0,0008075    |    0,0001196
-Hard       | 5     |     0,0002767    |    0,0003110    |    0,0000934
-Hard       | 6     |     0,0003598    |    0,0002155    |    0,0001183
-Hard       | 7     |     0,0059266    |    0,0092348    |    0,0000777
-God        | 8     |     0,0878996    |    0,0480385    |    **X**
-God        | 9     |     0,0033681    |    0,0012883    |    **X**
-God        | 10    |     0,0021168    |    0,0016321    |    **X**
-Hardest    | 11    |     0,0080305    |    0,0192789    |    **X**
+Sudoku level | Puzzle no. | Backtracking by row [µs] | Backtracking by block [µs] | Deduction algorithms [µs]
+------------ | ------------: | ----------------------- | ------------------------- | ------------------------
+Very Easy  | 1     |     7,6        |    8,8 		  |    12,2
+Medium     | 2     |     379,2      |    572,0 		|    19,1
+Hard       | 3     |     160,6      |    210,9 		|    39,5
+Hard       | 4     |     634,6      |    759,6 		|    114,2
+Hard       | 5     |     275,6      |    294,2 		|    71,4
+Hard       | 6     |     362,8      |    217,0 		|    123,2
+Hard       | 7     |     6 321,5    |    8 805,0 	|    108,3
+God        | 8     |     87 149,4   |    46 973,1 |    **X**
+God        | 9     |     3 398,1    |    1 359,2 	|    **X**
+God        | 10    |     2 186,7    |    1 624,1 	|    **X**
+Hardest    | 11    |     8 355,3    |    19 648,7 |    **X**
 
 --------------------------------------------
 
 #### Averages on different puzzle levels
 
-Sudoku level | Backtracking by row [s] | Backtracking by block [s] | Deduction algorithms [s]
+Sudoku level | Backtracking by row [µs] | Backtracking by block [µs] | Deduction algorithms [µs]
 ------------ | ----------------------- | ------------------------- | ------------------------
-Very Easy  | 0,0000046    |    0,0000056  |    0,0000199
-Medium     | 0,0003938    |    0,0006071  |    0,0000323
-Hard       | 0,0014799    |    0,0021580  |    0,0000967
-God        | 0,0253537    |    0,0175594  |    **X**
-**All levels**| **0,0099284**| **0,0074219** |    **X**
+Very Easy     | 7,6 |    8,8  |    12,2
+Medium        | 379,2 |    572,0  |    19,1
+Hard          | 1551,0 |    2057,3  |    91,3
+God           | 25272,4 |    17401,3  |    **X**
+**All levels**| **9930,1**| **7315,7** |    **X**
 
 -----------------------------------------
 
